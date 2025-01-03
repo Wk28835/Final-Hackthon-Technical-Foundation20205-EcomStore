@@ -2,21 +2,28 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
- const  Slider=({})=> {
-   
-  const [products, setProducts] = useState([]);
-  const [filteredProducts, setFilteredProducts] = useState([]);
-  const [category, setCategory] = useState("shoes"); // Default category to "shoes"
+interface Product {
+  _id: string;
+  title: string;
+  price: number;
+  category: string;
+  imageUrl: string;
+  slug?: { current: string };
+}
+
+const Slider = () => {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
+  const [category] = useState("shoes");
 
   useEffect(() => {
-    // Fetch all products
     async function fetchProducts() {
       try {
-        const res = await fetch("/api/products"); // Ensure API is set up
+        const res = await fetch("/api/products");
         if (!res.ok) {
           throw new Error("Failed to fetch products");
         }
-        const data = await res.json();
+        const data: Product[] = await res.json();
         setProducts(data);
       } catch (error) {
         console.error("Error fetching products:", error);
@@ -26,11 +33,9 @@ import { useEffect, useState } from "react";
   }, []);
 
   useEffect(() => {
-    // Filter products by category
-    const filtered =products.filter((product:any) => product.category === category);
+    const filtered = products.filter((product: Product) => product.category === category);
     setFilteredProducts(filtered);
   }, [products, category]);
-  
 
   return (
     <div>
@@ -65,29 +70,23 @@ import { useEffect, useState } from "react";
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          
-          {filteredProducts.map((product:any) => (
+          {filteredProducts.map((product: Product) => (
             <div key={product._id} className="border p-4 rounded-lg shadow-sm">
-              <Link href={`/product_details/${product.slug?.current || ""}`} >
-              {product.imageUrl && (
-              <Image
-                alt={product.title}
-                src={product.imageUrl}
-                width={300}
-                height={300}
-                className="rounded"
-              />
-            )}
+              <Link href={`/product_details/${product.slug?.current || ""}`}>
+                {product.imageUrl && (
+                  <Image
+                    alt={product.title}
+                    src={product.imageUrl}
+                    width={300}
+                    height={300}
+                    className="rounded"
+                  />
+                )}
               </Link>
               <h2 className="mt-4 font-semibold text-lg">{product.title}</h2>
               <p className="text-gray-600">${product.price}</p>
               <p className="text-sm text-gray-500">{product.category}</p>
-              <button
-                
-
-                className="bg-green-500 text-white rounded p-2 mt-4">
-                Add to Cart
-              </button>
+              <button className="bg-green-500 text-white rounded p-2 mt-4">Add to Cart</button>
             </div>
           ))}
         </div>
@@ -111,5 +110,6 @@ import { useEffect, useState } from "react";
       </div>
     </div>
   );
-}
+};
+
 export default Slider;

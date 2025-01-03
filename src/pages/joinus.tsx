@@ -49,6 +49,7 @@ const Joinus: React.FC = () => {
         setErrorMessage(data.error || "Failed to create account.");
       }
     } catch (error) {
+      console.error("An error occurred:", error); // Logs error details for debugging
       setErrorMessage("An error occurred. Please try again.");
     }
   };
@@ -127,7 +128,7 @@ const Joinus: React.FC = () => {
           </div>
 
           <p className="text-gray-400 text-[12px] leading-[16px] text-center mt-4">
-            By creating an account, you agree to Nike's Privacy Policy and Terms of Use.
+            By creating an account, you agree to Nike&#39;s Privacy Policy and Terms of Use.
           </p>
 
           <button
