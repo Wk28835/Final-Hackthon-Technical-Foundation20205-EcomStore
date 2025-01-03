@@ -1,18 +1,11 @@
 
-
 import "react-toastify/dist/ReactToastify.css";
-
+import Image from "next/image";
 
 const Footer: React.FC = () => {
-
-  
-
-
-
-
  
   return (
-    <div style={{marginTop:"1450px"}}>
+    <div>
 
      
         <div className="main div bg-black text-white"
@@ -134,11 +127,37 @@ const Footer: React.FC = () => {
 
         <div className="flex"
          style={{width:"672px",height:"32px",marginTop:"12px",marginLeft:"8px"}}>
+
+          <Image 
+          style={{top:"60px",left:"40px",position:"relative"}}
+           width={10} height={12.11} alt="image"
+          src="/location2.png"
+          />
           <h1 style={{width:"26px",height:"12px",fontSize:"12px",marginTop:"75px",marginLeft:"54px"}}
           >India</h1>
           <h1 className="text-gray-500"
            style={{height:"14px", fontSize:"12px", marginTop:"75px",marginLeft:"54px"}}
           >© 2023 Nike, Inc. All Rights Reserved</h1>
+
+          <h1 className="text-gray-400"
+          style={{width:"40.26px",height:"17px",top:"70px",left:"415.64px",position:"relative"}}>
+            Guides
+          </h1>
+
+          <h1 className="text-gray-400 text-nowrap"
+          style={{width:"40.26px",height:"17px",top:"70px",left:"491.64px",position:"relative"}}>
+            Terms of Sale
+          </h1>
+
+          <h1 className="text-gray-400 text-nowrap"
+          style={{width:"40.26px",height:"17px",top:"70px",left:"599.64px",position:"relative"}}>
+            Term of Use
+          </h1>
+
+          <h1 className="text-gray-400 text-nowrap"
+          style={{width:"40.26px",height:"17px",top:"70px",left:"691.64px",position:"relative"}}>
+            Nike Privacy policy
+          </h1>
 
         </div>
 

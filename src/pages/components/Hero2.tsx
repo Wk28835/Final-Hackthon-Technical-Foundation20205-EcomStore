@@ -1,14 +1,7 @@
-
-
 import Image from "next/image";
 
 
 const hero2: React.FC = () => {
-
-  
-
-
-
 
  
   return (
@@ -22,27 +15,29 @@ const hero2: React.FC = () => {
           height: "977px",
           top: "3513.36px",
           left: "48px",
-          position: "absolute", // Needed for `top` and `left` to work
+          position: "revert", // Needed for `top` and `left` to work
         }}>
           <h1 style={{width:"111.48px",height:"27px", fontSize:"22px", lineHeight:"28px"}}
           >Dont Miss</h1>
 
           <Image
+          width={1344}
+          height={700}
           alt="image"
-          style={{width:"1344px",height:"700px"}}
+          
           src="/boy6.png"/>
 
-    <div className="flight"
-        style={{width:"1008px",height:"177px", top:"748px",left:"168px",position:"absolute"}}>
-        <h1 className="text-black text-nowrap"
-        style={{width:"512px",height:"60px",left:"247.97px",position:"absolute",fontSize:"52px",lineHeight:"60px,",
-          alignItems:"center" }}> FLIGHT ESSENTIALS</h1>
-      <p style={{width:"531px", height:"24px",top:"84px",left:"239.05px",fontSize:"15px",lineHeight:"24px",position:"absolute"}}
+    <div className="flight text-center mt-12  mx-auto"
+        style={{width:"1008px",height:"177px", top:"748px",left:"168px",position:"revert"}}>
+        <h1 className="text-black text-nowrap text-center flex mx-auto"
+        style={{width:"512px",height:"60px",left:"247.97px",position:"revert",fontSize:"52px",lineHeight:"60px"
+           }}> FLIGHT ESSENTIALS</h1>
+      <p className="text-center flex mx-auto" style={{width:"531px", height:"24px",top:"84px",left:"239.05px",fontSize:"15px",lineHeight:"24px",position:"revert"}}
       >Your built-to-last, all-week wears—but with style only Jordan Brand can deliver.</p>
         
 
         <button className="bg-black text-white"
-      style={{width:"80.38px",height:"39px",top:"138px",left:"460.81px",position:"absolute",
+      style={{width:"80.38px",height:"39px",top:"138px",left:"460.81px",position:"revert",
       paddingTop:"7.5px", paddingRight:"21.88px", paddingBottom:"7.5px", paddingLeft:"21.5px", 
       fontSize:"15px",lineHeight:"24px",borderRadius:"30px"}}>Shop</button>
         </div>
@@ -59,36 +54,36 @@ const hero2: React.FC = () => {
 
         <section>
           <div className="main div"
-          style={{width:"1344px",height:"592px",top:"4574.36px",left:"48px",position:"absolute"}}>
+          style={{width:"1344px",height:"592px",top:"4574.36px",left:"48px",position:"revert"}}>
 
           <h1
           style={{width:"157.61", height:"27px",fontSize:"23px",lineHeight:"28px"}}>The Essentials</h1>
 
           <div className="images flex">
             <Image alt="image" width={440} height={540}
-            style={{left:"6px",position:"absolute"}}
+            style={{left:"6px",position:"revert"}}
             src="/home1.png"
             />
               <button className="bg-white"
-            style={{position: "relative",borderRadius:"30px", top: "352.98px", left: "48px",width:"85.19px",height:"39px",
+            style={{position: "revert",borderRadius:"30px", top: "352.98px", left: "48px",width:"85.19px",height:"39px",
               paddingTop:"2.5px",paddingRight:"2.69px",paddingBottom:"3.5px",paddingLeft:"21.5"
             }}> Mens</button>
 
             <Image alt="image" width={440} height={540}
-            style={{left:"458px",position:"absolute"}}
+            style={{left:"458px",position:"revert"}}
             src="/home2.png"
             />
             <button className="bg-white"
-            style={{position: "absolute",borderRadius:"30px", top: "382.98px", left: "525px",width:"108.89px",height:"39px",
+            style={{position: "revert",borderRadius:"30px", top: "382.98px", left: "525px",width:"108.89px",height:"39px",
                paddingTop:"2.5px",paddingRight:"2.69px",paddingBottom:"3.5px",paddingLeft:"21.5"
             }}> Womens</button>
 
             <Image alt="image" width={440} height={540}
-            style={{left:"910px",position:"absolute"}}
+            style={{left:"910px",position:"revert"}}
             src="/home3.png"
             />
             <button className="bg-white text-center"
-            style={{position: "relative",borderRadius:"30px", top: "352.98px", left: "870px",width:"77.19px",height:"39px",
+            style={{position: "revert",borderRadius:"30px", top: "352.98px", left: "870px",width:"77.19px",height:"39px",
                paddingTop:"2.5px",paddingRight:"2.69px",paddingBottom:"3.5px",paddingLeft:"21.5"
             }}> Kids</button>
 
@@ -105,10 +100,10 @@ const hero2: React.FC = () => {
       height: "192px",
       margin: "auto", // Centers the main div horizontally
       top: "1500.36px", // Use only if necessary
-      position: "relative", // Sets proper context for child elements
+      position: "revert", // Sets proper context for child elements
     }}
   >
-    <div style={{ width: "184px", height: "192px", position: "relative" }}>
+    <div style={{ width: "184px", height: "192px", position: "revert" }}>
       <h1>Icons</h1>
       <ul style={{ fontSize: "15px", lineHeight: "24px" }}>
         <li>Air Force 1</li>
@@ -118,7 +113,7 @@ const hero2: React.FC = () => {
       </ul>
     </div>
 
-    <div style={{ width: "184px", height: "192px", position: "relative", marginLeft: "48px" }}>
+    <div style={{ width: "184px", height: "192px", position: "revert", marginLeft: "48px" }}>
       <h1>Shoes</h1>
       <ul style={{ fontSize: "15px", lineHeight: "24px" }}>
         <li>All Shoes</li>
@@ -128,7 +123,7 @@ const hero2: React.FC = () => {
       </ul>
     </div>
 
-    <div style={{ width: "184px", height: "192px", position: "relative", marginLeft: "48px" }}>
+    <div style={{ width: "184px", height: "192px", position: "revert", marginLeft: "48px" }}>
       <h1>Clothing</h1>
       <ul style={{ fontSize: "15px", lineHeight: "24px" }}>
         <li>All Clothing</li>
@@ -138,7 +133,7 @@ const hero2: React.FC = () => {
       </ul>
     </div>
 
-    <div style={{ width: "184px", height: "192px", position: "relative", marginLeft: "48px" }}>
+    <div style={{ width: "184px", height: "192px", position: "revert", marginLeft: "48px" }}>
       <h1>Kids</h1>
       <ul style={{ fontSize: "15px", lineHeight: "24px" }}>
         <li>Infants & Toddler Shoes</li>
