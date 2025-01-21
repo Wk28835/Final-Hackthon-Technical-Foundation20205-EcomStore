@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import Image from "next/image";
+import Footer from "./components/Footerr";
+import { useRouter } from "next/router";
+
 
 const Joinus: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -14,6 +17,8 @@ const Joinus: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
 
+  const router = useRouter();
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -25,7 +30,7 @@ const Joinus: React.FC = () => {
     setSuccessMessage("");
 
     try {
-      const response = await fetch("/api/login", {
+      const response = await fetch("/api/user", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -36,7 +41,9 @@ const Joinus: React.FC = () => {
       const data = await response.json();
 
       if (response.ok) {
+        router.push('/login');
         setSuccessMessage("Account created successfully!");
+        
         setFormData({
           email: "",
           password: "",
@@ -45,6 +52,7 @@ const Joinus: React.FC = () => {
           city: "",
           phone: "",
         });
+        
       } else {
         setErrorMessage(data.error || "Failed to create account.");
       }
@@ -55,6 +63,7 @@ const Joinus: React.FC = () => {
   };
 
   return (
+    <div>
     <div className="flex justify-center items-center mt-2 h-full bg-gray-50">
       <section className="w-[380px] h-[830px] relative">
         <div className="w-[324px] h-[128px] relative mx-auto">
@@ -152,6 +161,10 @@ const Joinus: React.FC = () => {
           </button>
         </p>
       </section>
+     
+    </div>
+
+    <Footer/>
     </div>
   );
 };

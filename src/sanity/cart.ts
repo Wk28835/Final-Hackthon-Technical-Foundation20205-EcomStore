@@ -1,7 +1,7 @@
 export default {
-    name:'product',
+    name:'cart',
     type:'document',
-    title:'Product',
+    title:'MyCart',
     fields:[
         {
             name:'title',
@@ -19,38 +19,13 @@ export default {
             title:'Quantity',
         },
         {
-            name:'colors',
-            title:'Colors',
-            type:'array',
-            of:[{type:'string'}]
-        }, 
-        {
-            name:'size',
-            title:'Size',
-            type:'array',
-            of:[{type:'string'}]
-        },
-        {
             name:'image',
-            type:'image',
             title:'Image',
+            type:'string',
             options:{
                 hotspot:true,
             },
         }, 
-        {
-            name: 'status',
-            type: 'string',
-            title: 'Status',
-            options: {
-              list: [
-                { title: 'Available', value: 'Available' },
-                { title: 'Sold Out', value: 'SoldOut' },
-                
-              ],
-            },
-        },   
-        
         {
             name: 'category',
             type: 'string',

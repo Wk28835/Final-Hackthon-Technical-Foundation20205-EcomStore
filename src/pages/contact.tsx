@@ -1,11 +1,13 @@
 
 import Image from "next/image";
+import Footer from "./components/Footerr";
 
 const contact: React.FC = () => {
 
   
  
     return (
+      <div>
       <div className="pb-44">
         
         <section className="main section1"
@@ -317,8 +319,8 @@ If you enter your PAN information at checkout, you&#39;ll be able to pay for you
         
   
       </div>
-  
-      
+  <Footer/>
+      </div>
       
     );
   };

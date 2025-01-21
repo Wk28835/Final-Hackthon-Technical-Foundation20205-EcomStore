@@ -1,122 +1,177 @@
 import sanityClient from "@/sanity/lib/client";
 import Image from "next/image";
 import { GetStaticPropsContext } from "next";
+import Footer from "../components/Footerr";
+import { useRouter } from "next/router";
+import { getCookie } from "cookies-next";
 
 interface ProductDetailsProps {
   product: {
+    _id:string;
     title: string;
     price: number;
     quantity: number;
     category: string;
+    colors: string[];
+    size:string[];
+    status: string;
     imageUrl: string;
   } | null;
 }
 
 export default function ProductDetails({ product }: ProductDetailsProps) {
+
+  const router = useRouter();
+
   if (!product) {
     return (
-      <div className="text-center">
-        <h1>404 - Product Not Found</h1>
-        <p>We could not find the product you were looking for.</p>
+      <div className="text-center py-20">
+        <h1 className="text-4xl font-bold text-gray-800">404 - Product Not Found</h1>
+        <p className="text-gray-500 mt-4">
+          We could not find the product you were looking for. Please try again later.
+        </p>
       </div>
     );
   }
 
+  const handleAddToCart = async () => {   
+    
+     
+     const user = getCookie("user") as string | undefined;// Check if user data exists in localStorage
+    
+     if (!user) {
+          router.push('/login'); // Redirect to login if not authenticated
+    }
+
+    else{
+       
+    try {
+      await sanityClient.create({
+        _type: "cart",
+        title: product.title,
+        price: product.price,
+        quantity: 1,
+        colors: product.colors,
+        status: product.status,
+        size:product.size,
+        category: product.category,
+        image: product.imageUrl,
+      });
+      window.alert("Product added to cart!");
+    } catch {
+      window.alert("Failed to add product to cart!");
+    }
+}  
+}; 
+  
+  const handleAddToWish = async () => {
+    const user = localStorage.getItem('user'); // Check if user data exists in localStorage
+    
+     if (!user) {
+          router.push('/login'); // Redirect to login if not authenticated
+    }
+        
+    else{
+      
+    try {
+      await sanityClient.create({
+        _type: "wish",
+        title: product.title,
+        price: product.price,
+        quantity: 1,
+        colors: product.colors,
+        status: product.status,
+        size:product.size,
+        category: product.category,
+        image: product.imageUrl,
+      });
+      window.alert("Product added to Wish List!");
+    } catch {
+      window.alert("Failed to add product to Wish List!");
+    }
+  }
+  
+  };
+
   return (
-    <div style={{ width: "1140px", height: "1073px" }}>
-      <section style={{ width: "900px", height: "1125px", top: "106px", left: "120px", position: "absolute" }}>
-        <div>
+    <div>
+      {/* Product Details Section */}
+      <div className="container mx-auto px-6 py-12 flex flex-col lg:flex-row gap-8">
+        {/* Product Image */}
+        <div className="flex-1">
           <Image
-            style={{ top: "110px", left: "-22px", position: "absolute" }}
-            alt="image"
-            width={653}
-            height={653}
-            src={product.imageUrl || "/shoe5.png"} // Default image if imageUrl is missing
+            alt={product.title}
+            src={product.imageUrl}
+            width={600}
+            height={600}
+            className="rounded-lg object-cover shadow-md"
           />
-          <div
-            style={{
-              width: "376px",
-              height: "1041px",
-              top: "-26px",
-              left: "768px",
-              position: "absolute",
-            }}
-          >
-            <h1
-              className="text-black"
-              style={{
-                width: "367px",
-                fontSize: "48px",
-                height: "96px",
-                top: "135px",
-                position: "absolute",
-                lineHeight: "48px",
-              }}
-            >
-              {product.title}
-            </h1>
-            <p
-              style={{
-                width: "374.92px",
-                fontSize: "15px",
-                height: "252px",
-                top: "255px",
-                position: "absolute",
-                lineHeight: "28px",
-              }}
-            >
-              {product.category}
-            </p>
-            <p
-              style={{
-                width: "229px",
-                fontSize: "36px",
-                height: "34px",
-                top: "535px",
-                position: "absolute",
-                lineHeight: "28px",
-              }}
-            >
-              ${product.price}
-            </p>
-            <div
-              className="bg-black flex"
-              style={{
-                width: "174.42px",
-                borderRadius: "30px",
-                height: "48px",
-                top: "595px",
-                position: "absolute",
-                paddingTop: "6.5px",
-                paddingLeft: "22.5px",
-                paddingRight: "23.92",
-                paddingBottom: "5.5",
-              }}
-            >
-              <Image
-                className="mb-2"
-                alt="cart icon"
-                width={29}
-                height={29}
-                src="/cart1.png"
-              />
-              <button
-                className="text-white my-1"
-                style={{
-                  textAlign: "center",
-                  width: "99px",
-                  height: "29px",
-                  fontSize: "16px",
-                  lineHeight: "24px",
-                  fontWeight: "500",
-                }}
-              >
-                Add to Cart
-              </button>
-            </div>
-          </div>
         </div>
-      </section>
+
+        {/* Product Info */}
+        <div className="flex-1">
+          <h1 className="text-3xl font-bold text-gray-800">{product.title}</h1>
+          <p className="text-gray-500 text-lg mt-2">Category: {product.category}</p>
+          <p className="text-gray-500 text-lg mt-2">Available Quantity: {product.quantity}</p>
+          <p className="text-gray-500 text-lg mt-2">Status: {product.status}</p>
+
+          {/* Colors */}
+          <div className="flex items-center mt-6 space-x-3">
+            <span className="font-semibold text-gray-700">Colors:</span>
+            {product.colors.map((color) => (
+              <span
+                key={color}
+                className={`w-6 h-6 rounded-full border-2 ${
+                  color === "red"
+                    ? "bg-red-600"
+                    : color === "green"
+                    ? "bg-green-600"
+                    : color === "blue"
+                    ? "bg-blue-600"
+                    : color === "pink"
+                    ? "bg-pink-600"
+                    : color === "black"
+                    ? "bg-gray-900"
+                    : "bg-gray-300"
+                }`}
+              ></span>
+            ))}
+          </div>
+
+            {/*we can use both way to render array of size and color one way is
+            used above color case and on is used below */}
+          <span className="font-semibold top-3 relative text-gray-700">Size:</span>
+          <div className="left-16 bottom-3 relative"> 
+            {Array.isArray(product.size) && product.size.includes('S') && <span className="border border-gray-300 px-1 mx-1">S</span>}
+            {Array.isArray(product.size) && product.size.includes('M') && <span className="border border-gray-300 px-1 mx-1">M</span>}
+            {Array.isArray(product.size) && product.size.includes('L') && <span className="border border-gray-300 px-1 mx-1">L</span>}
+            {Array.isArray(product.size) && product.size.includes('XL') && <span className="border border-gray-300 px-1 mx-1">XL</span>}
+            {Array.isArray(product.size) && product.size.includes('XXL') && <span className="border border-gray-300 px-1 mx-1">XXL</span>}
+            </div>
+
+
+
+          {/* Price */}
+          <p className="text-2xl font-bold text-gray-800 mt-6">${product.price}</p>
+
+          {/* Add to Cart Button */}
+          <button
+            onClick={handleAddToCart}
+            className="mt-6 bg-black text-white px-6 py-3 rounded-lg shadow-md hover:bg-gray-800 transition duration-200"
+          >
+            Add to Cart
+          </button>
+          
+          <button
+            onClick={handleAddToWish}
+            className="mt-6 left-8 relative bg-green-700 text-white px-6 py-3 rounded-lg shadow-md hover:bg-gray-800 transition duration-200"
+          >
+            Add to Wish List
+          </button>
+        </div>
+      </div>
+
+      <Footer />
     </div>
   );
 }
@@ -127,9 +182,12 @@ export async function getStaticProps(context: GetStaticPropsContext) {
   const slug = params?.slug as string;
 
   const query = `*[_type == "product" && slug.current == $slug][0]{
+    _id,
     title,
     price,
     quantity,
+    colors,
+    status,
     category,
     "imageUrl": image.asset->url
   }`;

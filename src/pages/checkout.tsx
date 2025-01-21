@@ -1,16 +1,71 @@
 
 import { ShoppingBag } from "lucide-react";
 import Image from "next/image";
+import Footer from "./components/Footerr";
 
-const checkout: React.FC = () => {
+import {  useState } from "react";
 
-  
+const Checkout: React.FC = () => {
+ 
+
+  const [formData,setFormData]=useState({
+        first_Name:"",
+        last_Name:"",
+        address_1:"",
+        address_2:"",
+        city:"",
+        phone:"",
+        email:"",
+        postal_code:"",
+  });
+
+    const handleChange = (e:React.ChangeEvent<HTMLInputElement>)=>{
+      const {name,value}=e.target;
+      setFormData({...formData,[name]:value});
+    }
+     
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const shipment = {
+      name: `${formData.first_Name} ${formData.last_Name}`,
+      address_line1: formData.address_1,
+      address_line2: formData.address_2,
+      city_locality: formData.city,
+      
+      postal_code: formData.postal_code,
+      phone: formData.phone,
+      email: formData.email,
+    };
+    try {
+      const response = await fetch("http://localhost:3000/api/shipenginelables", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(shipment),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to submit the form");
+      }
+
+      const result = await response.json();
+      
+      console.log("Success:", result);
+      alert("Form submitted successfully!");
+    } catch (error) {
+      console.error("Error:", error);
+      alert("There was an error submitting the form.");
+    }
+  };
+
+
  
     return (
       <div>
         
         <div className="parent_div flex"
-        style={{width:"880px",height:"2376px",left:"289px",position:"relative"}}>
+        style={{width:"880px",height:"1850px",left:"289px",position:"relative"}}>
 
           <section
           style={{width:"440px",height:"2206px",top:"2px",position:"relative"}}>
@@ -43,7 +98,7 @@ const checkout: React.FC = () => {
                 />
 
 
-                <button className="text-center"
+                <button className="text-center" onClick={handleSubmit}
                 style={{width:"64px",height:"24px",position:"relative",
                   fontWeight:"500",fontSize:"15px",lineHeight:"24px"}}>Deliver It</button>             
 
@@ -59,42 +114,37 @@ const checkout: React.FC = () => {
                   Enter your name and address:
               </p>
 
-              <input className="border placeholder:text-black"
+              <input className="border placeholder:text-black" name="first_Name" value={formData.first_Name} onChange={handleChange}
               style={{width:"440px",height:"56px",top:"25px",position:"relative", borderRadius:"4px",
                 paddingTop:"16px",paddingBottom:"16px",paddingRight:"16px",paddingLeft:"16px"}}
             placeholder="First Name"
               />
 
-          <input className="border placeholder:text-black"
+          <input className="border placeholder:text-black" name="last_Name"value={formData.last_Name} onChange={handleChange}
               style={{width:"440px",height:"56px",top:"45px",position:"relative", borderRadius:"4px",
                 paddingTop:"16px",paddingBottom:"16px",paddingRight:"16px",paddingLeft:"16px"}}
             placeholder="Last Name"
               />
 
-        <input className="border placeholder:text-black"
+        <input className="border placeholder:text-black" name="address_1" value={formData.address_1} onChange={handleChange}
               style={{width:"440px",height:"56px",top:"65px",position:"relative", borderRadius:"4px",
                 paddingTop:"16px",paddingBottom:"16px",paddingRight:"16px",paddingLeft:"16px"}}
             placeholder="Adress Line 1"
               />
-          <p className="text-gray-400"
+          <p className="text-gray-400" 
           style={{width:"149px",height:"24px",top:"62px",left:"20px",position:"relative",
            fontWeight:"400",fontSize:"11px",lineHeight:"24px"}}>
               We do not ship to P.O. boxes
             </p>
 
-        <input className="border placeholder:text-black"
+        <input className="border placeholder:text-black" name="address_2" value={formData.address_2} onChange={handleChange}
               style={{width:"440px",height:"56px",top:"65px",position:"relative", borderRadius:"4px",
                 paddingTop:"16px",paddingBottom:"16px",paddingRight:"16px",paddingLeft:"16px"}}
             placeholder="Address Line 2"
               />
 
-        <input className="border placeholder:text-black"
-              style={{width:"440px",height:"56px",top:"85px",position:"relative", borderRadius:"4px",
-                paddingTop:"16px",paddingBottom:"16px",paddingRight:"16px",paddingLeft:"16px"}}
-            placeholder="Address Line 3"
-              />
-
-      <input className="border placeholder:text-black"
+        
+      <input className="border placeholder:text-black" name="postal_code" value={formData.postal_code} onChange={handleChange}
               style={{width:"211.19px",height:"56px",top:"95px",position:"relative", borderRadius:"4px",
                 paddingTop:"16px",paddingBottom:"16px",paddingRight:"16px",paddingLeft:"16px"}}
             placeholder="Postal Code"
@@ -107,50 +157,44 @@ const checkout: React.FC = () => {
               /> 
 
           
-              <select className="border placeholder:text-gray-600"
+              <select className="border placeholder:text-gray-600" name="state" 
             style={{width:"211.19px",height:"56px",top:"105px",position:"relative", borderRadius:"4px",
               paddingTop:"16px",paddingBottom:"16px",paddingRight:"16px",paddingLeft:"16px"}}>Pakistan
-            <option>State/Territory</option>
+            <option >State</option><option>Territory</option>
             </select> 
               
 
-          <input className="border placeholder:text-black"
+          <input className="border placeholder:text-black" name="city" value={formData.city} onChange={handleChange}
               style={{width:"211.19px",height:"56px",top:"105px",left:"16.81px",position:"relative", borderRadius:"4px",
                 paddingTop:"16px",paddingBottom:"16px",paddingRight:"16px",paddingLeft:"16px"}}
             placeholder="India"
               /> 
              
            <input type="checkbox"
-           style={{width:"18px",height:"18px",top:"148px",left:"2.81px",position:"relative", borderRadius:"4px",
+           style={{width:"18px",height:"18px",top:"128px",left:"2.81px",position:"relative", borderRadius:"4px",
             }}>
 
             </input>
                       
 
             <p className=""
-            style={{width:"225px",height:"24px",top:"120px",left:"32px",position:"relative",
+            style={{width:"225px",height:"24px",top:"100px",left:"30px",position:"relative",
               fontSize:"15px",fontWeight:"400",lineHeight:"24px"}}>
             Save this address to my profile
             </p>
 
             <input type="checkbox placeholder:text-black"
-           style={{width:"18px",height:"18px",top:"148px",left:"2.81px",position:"relative", borderRadius:"4px",
+           style={{width:"18px",height:"18px",top:"135px",left:"2.81px",position:"relative", borderRadius:"4px",
             }}>
 
             </input>
                       
-
-            <p className=""
-            style={{width:"225px",height:"24px",top:"120px",left:"32px",position:"relative",
-              fontSize:"15px",fontWeight:"400",lineHeight:"24px"}}>
-            Make this my preferred address
-            </p>
-
             
+                      
         </div>
 
           <div
-          style={{width:"440px",height:"256px",top:"10px",position:"relative",
+          style={{width:"440px",height:"256px",top:"-90px",position:"relative",
             paddingTop:"20px",paddingBottom:"8px",gap:"28px" }}>
         <h1 className="font-medium"
                style={{width:"300px",height:"24px",top:"10px",position:"relative",
@@ -158,7 +202,7 @@ const checkout: React.FC = () => {
                  What&#39;s your contact information?
               </h1>
 
-              <input className="border placeholder:text-black"
+              <input className="border placeholder:text-black" name="email" value={formData.email}  onChange={handleChange}
               style={{width:"440px",height:"56px",top:"65px",position:"relative", borderRadius:"4px",
                 paddingTop:"16px",paddingBottom:"16px",paddingRight:"16px",paddingLeft:"16px"}}
             placeholder="Email"
@@ -170,7 +214,7 @@ const checkout: React.FC = () => {
               A confirmation email will be sent after checkout.
             </p> 
 
-            <input className="border placeholder:text-black"
+            <input className="border placeholder:text-black" name="phone" value={formData.phone} onChange={handleChange}
               style={{width:"440px",height:"56px",top:"65px",position:"relative", borderRadius:"4px",
                 paddingTop:"16px",paddingBottom:"16px",paddingRight:"16px",paddingLeft:"16px"}}
             placeholder="Phone Number"
@@ -182,24 +226,9 @@ const checkout: React.FC = () => {
              A carrier might contact you to confirm delivery.
             </p>
 
-            <h1 className="font-medium"
-               style={{width:"300px",height:"24px",top:"101px",position:"relative",
-                fontSize:"21px",lineHeight:"24px",color:"black"}}>
-                 What&#39;s your PAN?
-              </h1> 
+          
 
-              <input className="border placeholder:text-black"
-              style={{width:"440px",height:"56px",top:"125px",position:"relative", borderRadius:"4px",
-                paddingTop:"16px",paddingBottom:"16px",paddingRight:"16px",paddingLeft:"16px"}}
-            placeholder="Pan"
-              />
-
-              <p className="text-gray-400 text-nowrap"
-          style={{width:"149px",height:"24px",top:"125px",left:"16px",position:"relative",
-           fontWeight:"400",fontSize:"11px",lineHeight:"24px"}}>
-             Enter your PAN to enable payment with UPI, Net Banking or local<br/> card methods
-            </p>
-
+             
             <input type="checkbox placeholder:text-black"
            style={{width:"18px",height:"18px",top:"168px",left:"2.81px",position:"relative", borderRadius:"4px",
             }}>
@@ -207,34 +236,28 @@ const checkout: React.FC = () => {
             </input>
                       
 
-            <p className=""
-            style={{width:"225px",height:"24px",top:"140px",left:"32px",position:"relative",
-              fontSize:"15px",fontWeight:"400",lineHeight:"24px"}}>
-            Save PAN details to Nike Profile
-            </p>
-
             <input type="checkbox"
-           style={{width:"18px",height:"18px",top:"183px",left:"2.81px",position:"relative", borderRadius:"4px",
+           style={{width:"18px",height:"18px",top:"90px",left:"-20px",position:"relative", borderRadius:"4px",
             }}>
 
             </input>
                       
 
             <p className="text-gray-600"
-            style={{width:"404.5px",height:"42px",top:"155px",left:"32px",position:"relative",
+            style={{width:"404.5px",height:"42px",top:"60px",left:"27px",position:"relative",
               fontSize:"12px",fontWeight:"400",lineHeight:"14px"}}>
             I have read and consent to eShopWorld processing my information in accordance with the Privacy Statement and Cookie Policy. eShopWorld<br/> is a trusted Nike partner.
             </p>
 
             <button className="bg-gray-100"
-            style={{width:"440px",height:"60px",borderRadius:"30px",top:"270px",left:"1px",position:"relative",
+            style={{width:"440px",height:"60px",borderRadius:"30px",top:"95px",left:"1px",position:"relative",
               paddingTop:"16px",paddingBottom:"16px",paddingRight:"185.33px",paddingLeft:"185.33px"
               ,fontSize:"15px",fontWeight:"500",lineHeight:"28px",textAlign:"center"}}>
                   Continue
             </button>
-
+              
             <div
-            style={{width:"440px",height:"316px",top:"155px",left:"2px",position:"relative",}}>
+            style={{width:"440px",height:"316px",top:"20px",left:"2px",position:"relative",}}>
 
       <h1 className="border"
               style={{width:"440px",height:"57px",top:"165px",position:"relative", borderBottom:"1px",
@@ -257,7 +280,7 @@ const checkout: React.FC = () => {
             </div>
 
             <h1 className="border text-gray-600"
-              style={{width:"440px",height:"57px",top:"195px",position:"relative", borderBottom:"1px",
+              style={{width:"440px",height:"57px",top:"50px",position:"relative", borderBottom:"1px",
                 paddingTop:"16px",paddingBottom:"32px",paddingLeft:"12px"}}
             
               >Payment</h1>    
@@ -411,12 +434,14 @@ const checkout: React.FC = () => {
 
             </div>
 
+            
+
 
           </section>
 
         </div>
         
-  
+  <Footer/>
       </div>
   
 
@@ -424,5 +449,5 @@ const checkout: React.FC = () => {
     );
   };
   
-  export default checkout;
+  export default Checkout;
   

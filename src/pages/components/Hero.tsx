@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 interface Product {
@@ -7,6 +8,7 @@ interface Product {
   price: number;
   category: string;
   imageUrl: string;
+  slug?: { current: string };
 }
 
 const Hero: React.FC = () => {
@@ -77,13 +79,14 @@ const Hero: React.FC = () => {
               className="bg-gray-100 p-4"
             >
               {key.imageUrl && (
+                <Link href={`/product_details/${key.slug?.current || ""}`}>
                 <Image
                   width={300}
                   height={300}
                   src={key.imageUrl}
                   alt="Product Image"
                   className="rounded"
-                />
+                /></Link>
               )}
 
               <div className="mt-4">

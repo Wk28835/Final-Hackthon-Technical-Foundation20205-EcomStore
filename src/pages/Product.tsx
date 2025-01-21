@@ -1,20 +1,60 @@
 
 import Image from "next/image";
-
-
-const product: React.FC = () => {
-
-  
+import Footer from "./components/Footerr";
+import { useEffect, useState } from "react";
+import Link from "next/link";
 
 
 
+interface Product{
+  _id: string;
+  title: string;
+  price: number;
+  colors:string;
+  size:string;
+  quantity:string;
+  status:string;
+  category: string;
+  imageUrl: string;
+  slug?: { current: string };
+}
+
+const Product: React.FC = () => {
+
+  const [item,setitem]=useState<Product[]>([]);
 
  
+  
+  
+  
+  
+  useEffect(()=>{
+    async function fetchitem() {
+      
+        try{
+            const res = await fetch("/api/products");
+            if(!res.ok){
+              throw new Error("Failed to fetch Products!")
+            }
+            const data:[Product]= await res.json();
+            console.log("check data",data);
+            setitem(data);
+        }
+        catch(error){
+          console.error("Error Fetching Products:",error);
+        }
+    }
+    fetchitem();
+  },[]);
+
+
+    
+
   return (
     <div>
-<section>
+  <section>
         <div className="text-black text-nowrap flex"
-         style={{height:"36px",marginLeft:"48px",marginTop:"95px"}}>
+         style={{height:"36px",marginLeft:"48px",marginTop:"60px"}}>
         <h1  style={{width:"110px",height:"32px",fontSize:"24px", lineHeight:"31.2px"}}
         >New (500)</h1>
 
@@ -130,357 +170,94 @@ const product: React.FC = () => {
               <label htmlFor="women">₹ 2 501.00 - ₹</label>
             </div>
            
-</div>
+    </div>
 
-
-
-                  </div>
-
-                  </div>
-                    </div>
-              </section>
-</div>
-
-
-
-    <div>
-      <section className="products ml-10">
-        <div className="main div1 flex"
-        style={{width:"",height:""}}>
-
-          <div className="product1"
-          style={{width:"348",height:"533px",marginLeft:"8px"}}>
-            <Image alt="image" className="bg-gray-500" width={348} height={348}
-            src="/shoe3.png"
-            />
-              <div
-          style={{width:"348",height:"185px",marginTop:"8px"}}>
-
-            <h1 className="text-orange-700"
-            style={{width:"47px",height:"28px",marginTop:"8px",fontSize:"15px",lineHeight:"28px"}}
-            >Just In</h1>
-
-            <h1 className="text-black"
-            style={{width:"166px",height:"24px",marginTop:"8px",fontSize:"15px",lineHeight:"24px"}}
-            >Nike Air Force 1 Mid  07 </h1>
-            
-             <h1 className="text-gray-500"
-            style={{width:"88px",height:"24px",marginTop:"8px",fontSize:"15px",lineHeight:"24px"}}
-            >Men s Shoes</h1>
-
-            <h1 className="text-gray-500"
-            style={{width:"60.68px",height:"17px",marginTop:"8px",fontSize:"15px",lineHeight:"24px"}}
-            >1 color</h1>
-
-          <h1 className="text-black"
-            style={{width:"132.42px",height:"17px",marginTop:"8px",fontSize:"15px",lineHeight:"28px"}}
-            >MRP : ₹ 10 795.00</h1>
-            
-
-          </div>
-
-          </div>
-
-
-          <div className="product2"
-          style={{width:"348",height:"533px",marginLeft:"8px"}}>
-            <Image alt="image" className="bg-gray-500" width={348} height={348}
-            src="/shoe4.png"
-            />
-              <div
-          style={{width:"348",height:"185px",marginTop:"8px"}}>
-
-            <h1 className="text-orange-700"
-            style={{width:"47px",height:"28px",marginTop:"8px",fontSize:"15px",lineHeight:"28px"}}
-            >Just In</h1>
-
-            <h1 className="text-black"
-            style={{width:"166px",height:"24px",marginTop:"8px",fontSize:"15px",lineHeight:"24px"}}
-            >Nike Air Force 1 Mid  07 </h1>
-            
-             <h1 className="text-gray-500"
-            style={{width:"88px",height:"24px",marginTop:"8px",fontSize:"15px",lineHeight:"24px"}}
-            >Men s Shoes</h1>
-
-            <h1 className="text-gray-500"
-            style={{width:"60.68px",height:"17px",marginTop:"8px",fontSize:"15px",lineHeight:"24px"}}
-            >1 color</h1>
-
-          <h1 className="text-black"
-            style={{width:"132.42px",height:"17px",marginTop:"8px",fontSize:"15px",lineHeight:"28px"}}
-            >MRP : ₹ 10 795.00</h1>
-            
-
-          </div>
-
-          </div>
-
-          <div className="product3"
-          style={{width:"348",height:"533px",marginLeft:"8px"}}>
-            <Image alt="image" className="bg-gray-500" width={348} height={348}
-            src="/shoe5.png"
-            />
-              <div
-          style={{width:"348",height:"185px",marginTop:"8px"}}>
-
-            <h1 className="text-orange-700"
-            style={{width:"47px",height:"28px",marginTop:"8px",fontSize:"15px",lineHeight:"28px"}}
-            >Just In</h1>
-
-            <h1 className="text-black"
-            style={{width:"166px",height:"24px",marginTop:"8px",fontSize:"15px",lineHeight:"24px"}}
-            >Nike Air Force 1 Mid  07 </h1>
-            
-             <h1 className="text-gray-500"
-            style={{width:"88px",height:"24px",marginTop:"8px",fontSize:"15px",lineHeight:"24px"}}
-            >Men s Shoes</h1>
-
-            <h1 className="text-gray-500"
-            style={{width:"60.68px",height:"17px",marginTop:"8px",fontSize:"15px",lineHeight:"24px"}}
-            >1 color</h1>
-
-          <h1 className="text-black"
-            style={{width:"132.42px",height:"17px",marginTop:"8px",fontSize:"15px",lineHeight:"28px"}}
-            >MRP : ₹ 10 795.00</h1>
-            
-
-          </div>
-
-          </div>
-
-
-        
-
-        </div>
-
-
-        <div className="main div2 flex"
-        style={{width:"",height:""}}>
-
-          <div className="product1"
-          style={{width:"348",height:"533px",marginLeft:"8px"}}>
-            <Image alt="image" className="bg-gray-500" width={348} height={348}
-            src="/shoe6.png"
-            />
-              <div
-          style={{width:"348",height:"185px",marginTop:"8px"}}>
-
-            <h1 className="text-orange-700"
-            style={{width:"47px",height:"28px",marginTop:"8px",fontSize:"15px",lineHeight:"28px"}}
-            >Just In</h1>
-
-            <h1 className="text-black"
-            style={{width:"166px",height:"24px",marginTop:"8px",fontSize:"15px",lineHeight:"24px"}}
-            >Nike Air Force 1 Mid  07 </h1>
-            
-             <h1 className="text-gray-500"
-            style={{width:"88px",height:"24px",marginTop:"8px",fontSize:"15px",lineHeight:"24px"}}
-            >Men s Shoes</h1>
-
-            <h1 className="text-gray-500"
-            style={{width:"60.68px",height:"17px",marginTop:"8px",fontSize:"15px",lineHeight:"24px"}}
-            >1 color</h1>
-
-          <h1 className="text-black"
-            style={{width:"132.42px",height:"17px",marginTop:"8px",fontSize:"15px",lineHeight:"28px"}}
-            >MRP : ₹ 10 795.00</h1>
-            
-
-          </div>
-
-          </div>
-
-
-          <div className="product2"
-          style={{width:"348",height:"533px",marginLeft:"8px"}}>
-            <Image alt="image" className="bg-gray-500" width={348} height={348}
-            src="/shoe7.png"
-            />
-              <div
-          style={{width:"348",height:"185px",marginTop:"8px"}}>
-
-            <h1 className="text-orange-700"
-            style={{width:"47px",height:"28px",marginTop:"8px",fontSize:"15px",lineHeight:"28px"}}
-            >Just In</h1>
-
-            <h1 className="text-black"
-            style={{width:"166px",height:"24px",marginTop:"8px",fontSize:"15px",lineHeight:"24px"}}
-            >Nike Air Force 1 Mid  07 </h1>
-            
-             <h1 className="text-gray-500"
-            style={{width:"88px",height:"24px",marginTop:"8px",fontSize:"15px",lineHeight:"24px"}}
-            >Men s Shoes</h1>
-
-            <h1 className="text-gray-500"
-            style={{width:"60.68px",height:"17px",marginTop:"8px",fontSize:"15px",lineHeight:"24px"}}
-            >1 color</h1>
-
-          <h1 className="text-black"
-            style={{width:"132.42px",height:"17px",marginTop:"8px",fontSize:"15px",lineHeight:"28px"}}
-            >MRP : ₹ 10 795.00</h1>
-            
-
-          </div>
-
-          </div>
-
-
-          <div className="product6"
-          style={{width:"348",height:"533px",marginLeft:"8px"}}>
-            <Image alt="image" className="bg-gray-500" width={348} height={348}
-            src="/shoe8.png"
-            />
-              <div
-          style={{width:"348",height:"185px",marginTop:"8px"}}>
-
-            <h1 className="text-orange-700"
-            style={{width:"47px",height:"28px",marginTop:"8px",fontSize:"15px",lineHeight:"28px"}}
-            >Just In</h1>
-
-            <h1 className="text-black"
-            style={{width:"166px",height:"24px",marginTop:"8px",fontSize:"15px",lineHeight:"24px"}}
-            >Nike Air Force 1 Mid  07 </h1>
-            
-             <h1 className="text-gray-500"
-            style={{width:"88px",height:"24px",marginTop:"8px",fontSize:"15px",lineHeight:"24px"}}
-            >Men s Shoes</h1>
-
-            <h1 className="text-gray-500"
-            style={{width:"60.68px",height:"17px",marginTop:"8px",fontSize:"15px",lineHeight:"24px"}}
-            >1 color</h1>
-
-          <h1 className="text-black"
-            style={{width:"132.42px",height:"17px",marginTop:"8px",fontSize:"15px",lineHeight:"28px"}}
-            >MRP : ₹ 10 795.00</h1>
-            
-
-          </div>
-
-          </div>
-
-
-        
-
-        </div>
-
-
-
-
-        <div className="main div3 flex"
-        style={{width:"",height:""}}>
-
-          <div className="product1"
-          style={{width:"348",height:"533px",marginLeft:"8px"}}>
-            <Image alt="image" className="bg-gray-500" width={348} height={348}
-            src="/shoe9.png"
-            />
-              <div
-          style={{width:"348",height:"185px",marginTop:"8px"}}>
-
-            <h1 className="text-orange-700"
-            style={{width:"47px",height:"28px",marginTop:"8px",fontSize:"15px",lineHeight:"28px"}}
-            >Just In</h1>
-
-            <h1 className="text-black"
-            style={{width:"166px",height:"24px",marginTop:"8px",fontSize:"15px",lineHeight:"24px"}}
-            >Nike Air Force 1 Mid  07 </h1>
-            
-             <h1 className="text-gray-500"
-            style={{width:"88px",height:"24px",marginTop:"8px",fontSize:"15px",lineHeight:"24px"}}
-            >Men s Shoes</h1>
-
-            <h1 className="text-gray-500"
-            style={{width:"60.68px",height:"17px",marginTop:"8px",fontSize:"15px",lineHeight:"24px"}}
-            >1 color</h1>
-
-          <h1 className="text-black"
-            style={{width:"132.42px",height:"17px",marginTop:"8px",fontSize:"15px",lineHeight:"28px"}}
-            >MRP : ₹ 10 795.00</h1>
-            
-
-          </div>
-
-          </div>
-
-
-          <div className="product2"
-          style={{width:"348",height:"533px",marginLeft:"8px"}}>
-            <Image alt="image" className="bg-gray-500" width={348} height={348}
-            src="/shoe10.png"
-            />
-              <div
-          style={{width:"348",height:"185px",marginTop:"8px"}}>
-
-            <h1 className="text-orange-700"
-            style={{width:"47px",height:"28px",marginTop:"8px",fontSize:"15px",lineHeight:"28px"}}
-            >Just In</h1>
-
-            <h1 className="text-black"
-            style={{width:"166px",height:"24px",marginTop:"8px",fontSize:"15px",lineHeight:"24px"}}
-            >Nike Air Force 1 Mid  07 </h1>
-            
-             <h1 className="text-gray-500"
-            style={{width:"88px",height:"24px",marginTop:"8px",fontSize:"15px",lineHeight:"24px"}}
-            >Men s Shoes</h1>
-
-            <h1 className="text-gray-500"
-            style={{width:"60.68px",height:"17px",marginTop:"8px",fontSize:"15px",lineHeight:"24px"}}
-            >1 color</h1>
-
-          <h1 className="text-black"
-            style={{width:"132.42px",height:"17px",marginTop:"8px",fontSize:"15px",lineHeight:"28px"}}
-            >MRP : ₹ 10 795.00</h1>
-            
-
-          </div>
-
-          </div>
-
-
-          <div className="product6"
-          style={{width:"348",height:"533px",marginLeft:"8px"}}>
-            <Image alt="image" className="bg-gray-500" width={348} height={348}
-            src="/shoe11.png"
-            />
-              <div
-          style={{width:"348",height:"185px",marginTop:"8px"}}>
-
-            <h1 className="text-orange-700"
-            style={{width:"47px",height:"28px",marginTop:"8px",fontSize:"15px",lineHeight:"28px"}}
-            >Just In</h1>
-
-            <h1 className="text-black"
-            style={{width:"166px",height:"24px",marginTop:"8px",fontSize:"15px",lineHeight:"24px"}}
-            >Nike Air Force 1 Mid  07 </h1>
-            
-             <h1 className="text-gray-500"
-            style={{width:"88px",height:"24px",marginTop:"8px",fontSize:"15px",lineHeight:"24px"}}
-            >Men s Shoes</h1>
-
-            <h1 className="text-gray-500"
-            style={{width:"60.68px",height:"17px",marginTop:"8px",fontSize:"15px",lineHeight:"24px"}}
-            >1 color</h1>
-
-          <h1 className="text-black"
-            style={{width:"132.42px",height:"17px",marginTop:"8px",fontSize:"15px",lineHeight:"28px"}}
-            >MRP : ₹ 10 795.00</h1>
-            
-
-          </div>
-
-          </div>
-
-
-        
-
-        </div>
-      </section>
+   </div>
   </div>
+ </div>
+       </section>
+        </div>
+
+
+     <div>
+
+     <section className="item flex flex-wrap justify-start gap-1 ml-10 mt-10">
+
+{item.length === 0 ? (
+  <div className="text-center mt-44 text-4xl font-extrabold text-gray-700 w-full">
+    No items available! Stay tuned with us.
+  </div>
+) : (
+  item.map((item: Product) => (
+    <div 
+      key={item._id} 
+      className="main flex flex-col my-1 bg-white shadow-lg rounded-lg p-4 hover:shadow-2xl transition-shadow"
+      style={{ width: "315px", height: "auto" }}
+    >
+      {/* Product Image */}
+      <div className="product1">
+      <Link href={`/product_details/${item.slug?.current || ""}`}>
+                {item.imageUrl && (
+                  <Image
+                    alt={item.title}
+                    src={item.imageUrl}
+                    width={300}
+                    height={300}
+                    className="rounded"
+                  />
+                )}
+              </Link>
+      </div>
+
+      {/* Product Details */}
+      <div className="product-details mt-4">
+        <h1 className="text-orange-700 font-medium text-sm">{item.status}</h1>
+        <h2 className="text-black font-semibold text-lg mt-2">{item.title}</h2>
+        <p className="text-gray-500 text-sm mt-1">{item.category}</p>
+
+        {/* Colors */}
+        <div className="colors mt-4 flex items-center">
+          {Array.isArray(item.colors) && item.colors.includes("red") && (
+            <button className="border-2 border-gray-300 mx-1 bg-red-700 rounded-full w-6 h-6"></button>
+          )}
+          {Array.isArray(item.colors) && item.colors.includes("green") && (
+            <button className="border-2 border-gray-300 mx-1 bg-green-700 rounded-full w-6 h-6"></button>
+          )}
+          {Array.isArray(item.colors) && item.colors.includes("blue") && (
+            <button className="border-2 border-gray-300 mx-1 bg-blue-700 rounded-full w-6 h-6"></button>
+          )}
+          {Array.isArray(item.colors) && item.colors.includes("pink") && (
+            <button className="border-2 border-gray-300 mx-1 bg-pink-700 rounded-full w-6 h-6"></button>
+          )}
+          {Array.isArray(item.colors) && item.colors.includes("black") && (
+            <button className="border-2 border-gray-300 mx-1 bg-gray-900 rounded-full w-6 h-6"></button>
+          )}
+        </div>
+
+        {/* Sizes */}
+        <div className="sizes mt-4 flex items-center">
+          {Array.isArray(item.size) && item.size.includes('S') && <span className="border border-gray-300 px-2 py-1 mx-1 text-sm rounded">S</span>}
+          {Array.isArray(item.size) && item.size.includes('M') && <span className="border border-gray-300 px-2 py-1 mx-1 text-sm rounded">M</span>}
+          {Array.isArray(item.size) && item.size.includes('L') && <span className="border border-gray-300 px-2 py-1 mx-1 text-sm rounded">L</span>}
+          {Array.isArray(item.size) && item.size.includes('XL') && <span className="border border-gray-300 px-2 py-1 mx-1 text-sm rounded">XL</span>}
+          {Array.isArray(item.size) && item.size.includes('XXL') && <span className="border border-gray-300 px-2 py-1 mx-1 text-sm rounded">XXL</span>}
+        </div>
+
+        {/* Price */}
+        <h3 className="text-black font-semibold text-md mt-4">MRP: $ {item.price}</h3>
+      </div>
+    </div>
+  ))
+)}
+</section>
 
 
 </div>
 
 
+</div>
+
+<Footer/>
 
 </div>
     
@@ -488,4 +265,4 @@ const product: React.FC = () => {
   );
 };
 
-export default product;
+export default Product;

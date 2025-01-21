@@ -1,37 +1,36 @@
-import  client  from "@/sanity/lib/client"; // Replace with your configured Sanity client
-import type { NextApiRequest, NextApiResponse } from "next";
+// pages/api/login.js
+import sanityClient from '@/sanity/lib/client';
 
-export default async function handler( req: NextApiRequest, res: NextApiResponse) {
-  if (req.method === "POST") {
-    const { name, email, password, address, phone, city } = req.body;
+import { NextApiRequest, NextApiResponse } from 'next';
 
-    // Validate all required fields
-    if (!name || !email || !password || !address || !phone || !city) {
-      return res.status(400).json({ error: "All fields are required" });
+
+
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  if (req.method !== 'POST') {
+    return res.status(405).json({ message: 'Method Not Allowed' });
+  }
+
+  const { email, password } = req.body;
+
+  try {
+    // Find the user with the provided email
+    const user = await sanityClient
+      .fetch('*[_type == "user" && email == $email]', { email })
+      .then((data) => data[0]);
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
     }
 
-    try {
-      // Hash the password
-     
-
-      // Save the new user to Sanity
-      const newUser = await client.create({
-        _type: "user",
-        name,
-        email,
-        password, // Save hashed password
-        address,
-        phone,
-        city,
-      });
-
-      return res.status(201).json({ userId: newUser._id });
-    } catch (error) {
-      console.error("Error creating user:", error);
-      return res.status(500).json({ error: "Failed to create user" });
+    // Directly compare the password (NOT recommended for production)
+    if (password !== user.password) {
+      return res.status(401).json({ message: 'Invalid password' });
     }
-  } else {
-  
-    return res.status(405).json({ error: "Method not allowed!" });
+
+    // Send back user info (excluding sensitive data) on successful login
+    res.status(200).json({ email: user.email, id: user._id });
+  } catch (error) {
+    console.error('Error during login:', error);
+    res.status(500).json({ message: 'Server error' });
   }
 }

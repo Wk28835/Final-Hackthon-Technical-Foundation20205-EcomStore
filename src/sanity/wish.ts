@@ -1,7 +1,7 @@
 export default {
-    name:'product',
+    name:'wish',
     type:'document',
-    title:'Product',
+    title:'MyWishList',
     fields:[
         {
             name:'title',
@@ -12,11 +12,6 @@ export default {
             name:'price',
             type:'number',
             title:'Price',
-        },
-        {
-            name:'quantity',
-            type:'number',
-            title:'Quantity',
         },
         {
             name:'colors',
@@ -31,14 +26,6 @@ export default {
             of:[{type:'string'}]
         },
         {
-            name:'image',
-            type:'image',
-            title:'Image',
-            options:{
-                hotspot:true,
-            },
-        }, 
-        {
             name: 'status',
             type: 'string',
             title: 'Status',
@@ -49,8 +36,20 @@ export default {
                 
               ],
             },
-        },   
-        
+        },
+        {
+            name:'quantity',
+            type:'number',
+            title:'Quantity',
+        },
+        {
+            name:'image',
+            title:'Image',
+            type:'string',
+            options:{
+                hotspot:true,
+            },
+        }, 
         {
             name: 'category',
             type: 'string',

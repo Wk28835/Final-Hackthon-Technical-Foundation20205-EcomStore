@@ -1,4 +1,4 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
+
 import type { NextApiRequest, NextApiResponse } from "next";
 import sanityClient from "../../sanity/lib/client"
 
@@ -9,7 +9,7 @@ type Data = {
 
 export default async function handler( req: NextApiRequest, res: NextApiResponse<Data>,) 
 {
-    
+    if(req.method === "GET"){
   const category = req.query.category; // Extract category from query
   const query = `*[_type == "product" ${category ? `&& category == $category` : ''}]{
       _id,
@@ -17,12 +17,17 @@ export default async function handler( req: NextApiRequest, res: NextApiResponse
       price,
       quantity,
       category,
+      size,
+      colors,
+      status,
       "imageUrl": image.asset->url,
       slug
     }`;
   
-  // If category is defined, pass it in the parameters object
+  
   const items = await sanityClient.fetch(query, category ? { category } : {});
   
   res.status(200).json(items);
+  }
+  
 }

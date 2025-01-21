@@ -1,9 +1,31 @@
 import Link from "next/link";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
+import { deleteCookie, getCookie } from "cookies-next";
+import { useRouter } from "next/router";
 
-const Nav: React.FC = () => {
+interface NavProps {
+  searchQuery: string;
+  setSearchQuery: React.Dispatch<React.SetStateAction<string>>;
+}
+
+const Nav: React.FC<NavProps> = ({ searchQuery, setSearchQuery }) => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [checkUser, setCheckUser] = useState<string | undefined>("");
+  
+  const router = useRouter();
+  useEffect(() => {
+    const user = getCookie("user") as string | undefined;
+    setCheckUser(user);
+    
+  }, []);
+
+  const handleLogout = () => {
+    deleteCookie("user");
+    setCheckUser(undefined);
+    router.push('/');
+    console.log("User logged out");
+  };
 
   return (
     <section className="revert">
@@ -27,14 +49,22 @@ const Nav: React.FC = () => {
             <span>|</span>
             <Link href={"/contact"}>Help</Link>
             <span>|</span>
-            <Link href={"/joinus"}>Join Us</Link>
-            <span>|</span>
-            <Link href={"/login"}>Sign in</Link>
+            {!checkUser ? (
+              <div>
+                <Link href={"/joinus"}>Join Us</Link>
+                <span>|</span>
+                <Link href={"/login"}>Sign in</Link>
+              </div>
+            ) : (
+              <button onClick={handleLogout} className="text-blue-500 hover:underline">
+                Logout
+              </button>
+            )}
           </div>
         </div>
 
         {/* Main Navbar */}
-        <div className="flex items-center justify-between  py-4">
+        <div className="flex items-center justify-between py-4">
           {/* Logo */}
           <div
             className="flex items-center justify-center"
@@ -93,12 +123,18 @@ const Nav: React.FC = () => {
               marginLeft: "340px",
             }}
           >
-            <Link href={"/"}>New & Featured</Link>
+            <Link className="text-nowrap" href={"/"}>
+              New & Featured
+            </Link>
             <Link href={"/"}>Men</Link>
             <Link href={"/"}>Women</Link>
-            <Link href={"/"}>Kids</Link>
+            <Link className="text-nowrap" href={"/Product"}>
+              Latest Products
+            </Link>
             <Link href={"/Product"}>Sale</Link>
-            <Link href={"/"}>SNKRS</Link>
+            <Link className="text-nowrap" href={"/wishList"}>
+              Wish List
+            </Link>
           </div>
 
           {/* Search Bar */}
@@ -115,6 +151,8 @@ const Nav: React.FC = () => {
             />
             <input
               type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search..."
               className="mx-2 w-full bg-transparent outline-none text-gray-700"
             />
@@ -165,6 +203,8 @@ const Nav: React.FC = () => {
             <input
               type="text"
               placeholder="Search..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
               className="w-10/12 px-4 py-2 bg-white rounded-md border outline-none text-gray-700"
             />
           </div>

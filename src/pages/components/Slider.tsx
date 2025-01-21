@@ -2,10 +2,15 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
+
 interface Product {
   _id: string;
   title: string;
   price: number;
+  colors:string;
+  size:string;
+  quantity:string;
+  status:string;
   category: string;
   imageUrl: string;
   slug?: { current: string };
@@ -70,6 +75,7 @@ const Slider = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+
           {filteredProducts.map((product: Product) => (
             <div key={product._id} className="border p-4 rounded-lg shadow-sm">
               <Link href={`/product_details/${product.slug?.current || ""}`}>
@@ -86,11 +92,46 @@ const Slider = () => {
               <h2 className="mt-4 font-semibold text-lg">{product.title}</h2>
               <p className="text-gray-600">${product.price}</p>
               <p className="text-sm text-gray-500">{product.category}</p>
-              <button className="bg-green-500 text-white rounded p-2 mt-4">Add to Cart</button>
+              <p className="text-sm left-56 font-bold text-red-700 relative bottom-10">{product.status}</p>
+              <p className="text-sm left-56 text-gray-500 relative bottom-8">Qty:{product.quantity}</p>
+
+             <div className="bottom-3 right-2 relative">
+              {Array.isArray(product.colors) && product.colors.includes("red") && (
+              <button className="border-2 border-gray-300 ml-1 mx-1 bg-red-700 rounded-full w-6 h-6"></button>
+              )}
+              
+              {Array.isArray(product.colors) && product.colors.includes("green") && (
+              <button className="border-2 border-gray-300 ml-1 mx-1 bg-green-700 rounded-full w-6 h-6"></button>
+              )} 
+              
+              {Array.isArray(product.colors) && product.colors.includes("blue") && (
+              <button className="border-2 border-gray-300 ml-1 mx-1 bg-blue-700 rounded-full w-6 h-6"></button>
+              )}
+              
+              {Array.isArray(product.colors) && product.colors.includes("pink") && (
+              <button className="border-2 border-gray-300 ml-1 mx-1 bg-pink-700 rounded-full w-6 h-6"></button>
+              )}
+              
+              {Array.isArray(product.colors) && product.colors.includes("black") && (
+              <button className="border-2 border-gray-300 ml-1 mx-1 bg-gray-900 rounded-full w-6 h-6"></button>
+              )}
+              </div>
+
+            <div className="left-52 bottom-10 relative">
+            {Array.isArray(product.size) && product.size.includes('S') && <span className="border border-gray-300 px-1 mx-1">S</span>}
+            {Array.isArray(product.size) && product.size.includes('M') && <span className="border border-gray-300 px-1 mx-1">M</span>}
+            {Array.isArray(product.size) && product.size.includes('L') && <span className="border border-gray-300 px-1 mx-1">L</span>}
+            {Array.isArray(product.size) && product.size.includes('XL') && <span className="border border-gray-300 px-1 mx-1">XL</span>}
+            {Array.isArray(product.size) && product.size.includes('XXL') && <span className="border border-gray-300 px-1 mx-1">XXL</span>}
+            </div>
+
+
             </div>
           ))}
+
         </div>
       </div>
+        <Link href="/Product" className="pl-8 top-4 justify-center relative hover:underline">More Products...</Link>
 
       {/* Featured Section */}
       <div className="mt-16 mx-auto max-w-screen-xl">
@@ -108,7 +149,10 @@ const Slider = () => {
           </div>
         </div>
       </div>
+      
     </div>
+
+    
   );
 };
 
