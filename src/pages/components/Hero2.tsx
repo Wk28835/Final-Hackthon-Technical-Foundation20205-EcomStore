@@ -1,159 +1,119 @@
 import Image from "next/image";
 
-
-const hero2: React.FC = () => {
-
- 
+const Hero2: React.FC = () => {
   return (
     <div>
-    
-    <section>
-      <div className="main div">
-        
-        <div
-        style={{width: "1344px",
-          height: "977px",
-          top: "3513.36px",
-          left: "48px",
-          position: "revert", // Needed for `top` and `left` to work
-        }}>
-          <h1 style={{width:"111.48px",height:"27px", fontSize:"22px", lineHeight:"28px"}}
-          >Dont Miss</h1>
-
-          <Image
+      {/* First Section */}
+      <section className="relative mx-auto max-w-screen-xl">
+        <h1 className="text-lg font-bold mb-4">Don't Miss</h1>
+        <Image
           width={1344}
           height={700}
-          alt="image"
-          
-          src="/boy6.png"/>
-
-    <div className="flight text-center mt-12  mx-auto"
-        style={{width:"1008px",height:"177px", top:"748px",left:"168px",position:"revert"}}>
-        <h1 className="text-black text-nowrap text-center flex mx-auto"
-        style={{width:"512px",height:"60px",left:"247.97px",position:"revert",fontSize:"52px",lineHeight:"60px"
-           }}> FLIGHT ESSENTIALS</h1>
-      <p className="text-center flex mx-auto" style={{width:"531px", height:"24px",top:"84px",left:"239.05px",fontSize:"15px",lineHeight:"24px",position:"revert"}}
-      >Your built-to-last, all-week wears—but with style only Jordan Brand can deliver.</p>
-        
-
-        <button className="bg-black text-white"
-      style={{width:"80.38px",height:"39px",top:"138px",left:"460.81px",position:"revert",
-      paddingTop:"7.5px", paddingRight:"21.88px", paddingBottom:"7.5px", paddingLeft:"21.5px", 
-      fontSize:"15px",lineHeight:"24px",borderRadius:"30px"}}>Shop</button>
+          alt="Highlight Image"
+          src="/boy6.png"
+          className="w-full h-auto"
+        />
+        <div className="text-center mt-12">
+          <h1 className="text-3xl font-bold mb-4">FLIGHT ESSENTIALS</h1>
+          <p className="text-sm text-gray-700 max-w-lg mx-auto">
+            Your built-to-last, all-week wears—but with style only Jordan Brand
+            can deliver.
+          </p>
+          <button className="mt-4 bg-black text-white px-6 py-2 rounded-full text-sm">
+            Shop
+          </button>
         </div>
+      </section>
+
+      {/* Second Section */}
+      <section className="relative mx-auto max-w-screen-xl mt-16">
+        <h1 className="text-lg font-bold mb-4">The Essentials</h1>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* Mens */}
+          <div className="relative">
+            <Image
+              alt="Mens Essentials"
+              width={440}
+              height={540}
+              src="/home1.png"
+              className="w-full h-auto"
+            />
+            <button className="absolute bottom-4 left-4 bg-white text-black px-4 py-2 rounded-full text-sm">
+              Mens
+            </button>
+          </div>
+          {/* Womens */}
+          <div className="relative">
+            <Image
+              alt="Womens Essentials"
+              width={440}
+              height={540}
+              src="/home2.png"
+              className="w-full h-auto"
+            />
+            <button className="absolute bottom-4 left-4 bg-white text-black px-4 py-2 rounded-full text-sm">
+              Womens
+            </button>
+          </div>
+          {/* Kids */}
+          <div className="relative">
+            <Image
+              alt="Kids Essentials"
+              width={440}
+              height={540}
+              src="/home3.png"
+              className="w-full h-auto"
+            />
+            <button className="absolute bottom-4 left-4 bg-white text-black px-4 py-2 rounded-full text-sm">
+              Kids
+            </button>
+          </div>
         </div>
-        
-        
+      </section>
 
-
-      </div>
-
-
-    </section>
-
-
-        <section>
-          <div className="main div"
-          style={{width:"1344px",height:"592px",top:"4574.36px",left:"48px",position:"revert"}}>
-
-          <h1
-          style={{width:"157.61", height:"27px",fontSize:"23px",lineHeight:"28px"}}>The Essentials</h1>
-
-          <div className="images flex">
-            <Image alt="image" width={440} height={540}
-            style={{left:"6px",position:"revert"}}
-            src="/home1.png"
-            />
-              <button className="bg-white"
-            style={{position: "revert",borderRadius:"30px", top: "352.98px", left: "48px",width:"85.19px",height:"39px",
-              paddingTop:"2.5px",paddingRight:"2.69px",paddingBottom:"3.5px",paddingLeft:"21.5"
-            }}> Mens</button>
-
-            <Image alt="image" width={440} height={540}
-            style={{left:"458px",position:"revert"}}
-            src="/home2.png"
-            />
-            <button className="bg-white"
-            style={{position: "revert",borderRadius:"30px", top: "382.98px", left: "525px",width:"108.89px",height:"39px",
-               paddingTop:"2.5px",paddingRight:"2.69px",paddingBottom:"3.5px",paddingLeft:"21.5"
-            }}> Womens</button>
-
-            <Image alt="image" width={440} height={540}
-            style={{left:"910px",position:"revert"}}
-            src="/home3.png"
-            />
-            <button className="bg-white text-center"
-            style={{position: "revert",borderRadius:"30px", top: "352.98px", left: "870px",width:"77.19px",height:"39px",
-               paddingTop:"2.5px",paddingRight:"2.69px",paddingBottom:"3.5px",paddingLeft:"21.5"
-            }}> Kids</button>
-
+      {/* Third Section */}
+      <section className="relative mx-auto max-w-screen-lg mt-16 text-center">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          <div>
+            <h1 className="font-bold">Icons</h1>
+            <ul className="text-sm space-y-2">
+              <li>Air Force 1</li>
+              <li>Air Max 95</li>
+              <li>Huarache</li>
+              <li>Air Max 90</li>
+            </ul>
           </div>
-
+          <div>
+            <h1 className="font-bold">Shoes</h1>
+            <ul className="text-sm space-y-2">
+              <li>All Shoes</li>
+              <li>Custom Shoes</li>
+              <li>Jordan Shoes</li>
+              <li>Running Shoes</li>
+            </ul>
           </div>
-        </section>
-
-<section>
-  <div
-    className="main flex text-center"
-    style={{
-      width: "880px",
-      height: "192px",
-      margin: "auto", // Centers the main div horizontally
-      top: "1500.36px", // Use only if necessary
-      position: "revert", // Sets proper context for child elements
-    }}
-  >
-    <div style={{ width: "184px", height: "192px", position: "revert" }}>
-      <h1>Icons</h1>
-      <ul style={{ fontSize: "15px", lineHeight: "24px" }}>
-        <li>Air Force 1</li>
-        <li>Air Max 95</li>
-        <li>Huarache</li>
-        <li>Air Max 90</li>
-      </ul>
+          <div>
+            <h1 className="font-bold">Clothing</h1>
+            <ul className="text-sm space-y-2">
+              <li>All Clothing</li>
+              <li>Modest Wear</li>
+              <li>Hoodies & Pullovers</li>
+              <li>Shirts & Tops</li>
+            </ul>
+          </div>
+          <div>
+            <h1 className="font-bold">Kids</h1>
+            <ul className="text-sm space-y-2">
+              <li>Infants & Toddler Shoes</li>
+              <li>Kids Shoes</li>
+              <li>Kids Jordan Shoes</li>
+              <li>Kids Basketball Shoes</li>
+            </ul>
+          </div>
+        </div>
+      </section>
     </div>
-
-    <div style={{ width: "184px", height: "192px", position: "revert", marginLeft: "48px" }}>
-      <h1>Shoes</h1>
-      <ul style={{ fontSize: "15px", lineHeight: "24px" }}>
-        <li>All Shoes</li>
-        <li>Custom Shoes</li>
-        <li>Jordan Shoes</li>
-        <li>Running Shoes</li>
-      </ul>
-    </div>
-
-    <div style={{ width: "184px", height: "192px", position: "revert", marginLeft: "48px" }}>
-      <h1>Clothing</h1>
-      <ul style={{ fontSize: "15px", lineHeight: "24px" }}>
-        <li>All Clothing</li>
-        <li>Modest Wear</li>
-        <li>Hoodies & Pullovers</li>
-        <li>Shirts & Tops</li>
-      </ul>
-    </div>
-
-    <div style={{ width: "184px", height: "192px", position: "revert", marginLeft: "48px" }}>
-      <h1>Kids</h1>
-      <ul style={{ fontSize: "15px", lineHeight: "24px" }}>
-        <li>Infants & Toddler Shoes</li>
-        <li>Kids Shoes</li>
-        <li>Kids Jordan Shoes</li>
-        <li>Kids Basketball Shoes</li>
-      </ul>
-    </div>
-  </div>
-</section>
-
-
-
-
-
-</div>
-
-      
-    
   );
 };
 
-export default hero2;
+export default Hero2;
