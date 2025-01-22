@@ -6,8 +6,8 @@ interface Product {
   id: string;
   title: string;
   price: number;
-  colors:string;
-  size:string;
+  colors: string;
+  size: string;
   category: string;
   imageUrl: string;
   slug?: { current: string };
@@ -41,111 +41,60 @@ const Hero: React.FC = () => {
   }, [products, category]);
 
   return (
-    <section>
-      <p
-        className="ml-10 m-2"
-        style={{ width: "90.9", height: "27px", fontSize: "23px", lineHeight: "28px" }}
-      >
-        Gear Up
-      </p>
+    <section className="px-4 py-8">
+      <p className="text-2xl font-bold mb-4">Gear Up</p>
 
-      <div className="flex">
-        <div style={{ width: "211px", marginTop: "2px", marginLeft: "507px", height: "48px" }}>
-          <button
-            style={{ width: "83px", height: "72px", marginLeft: "7px", marginTop: "2px", lineHeight: "24px" }}
-            className="text-black whitespace-nowrap pb-44"
-          >
-            Shop Mens
-          </button>
-        </div>
-
-        <div style={{ width: "211px", marginTop: "2px", marginLeft: "507px", height: "48px" }}>
-          <button
-            style={{ width: "83px", height: "72px", marginLeft: "7px", marginTop: "2px", lineHeight: "24px" }}
-            className="text-black whitespace-nowrap pb-44"
-          >
-            Shop Womens
-          </button>
-        </div>
+      <div className="flex justify-center gap-4 mb-8">
+        <button className="bg-black text-white px-4 py-2 rounded">Shop Mens</button>
+        <button className="bg-black text-white px-4 py-2 rounded">Shop Womens</button>
       </div>
 
-      <div
-        className="main div flex"
-        style={{ width: "1344px", height: "561px", marginLeft: "48px" }}
-      >
-        <div className="combine div1 flex">
-          {filteredProducts.map((key: Product) => (
-            <Link href={`/product_details/${key.slug?.current || ""}`}>
-            <div
-              key={key.id}
-              style={{ width: "300px", height: "393px", marginLeft: "48px" }}
-              className="bg-gray-100 p-4 bottom-4 relative"
-            >
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {filteredProducts.map((key: Product) => (
+          <Link href={`/product_details/${key.slug?.current || ""}`} key={key.id}>
+            <div className="bg-gray-100 p-4 rounded shadow hover:shadow-lg transition">
               {key.imageUrl && (
-                
                 <Image
                   width={250}
-                  height={50}
+                  height={250}
                   src={key.imageUrl}
-                  alt="Product Image"
-                  className="rounded"
+                  alt={key.title}
+                  className="rounded mb-4"
                 />
               )}
 
-              <div className="mt-4">
-                <div className="flex justify-between items-center">
-                  <span
-                    className="text-base font-semibold whitespace-nowrap"
-                    style={{ maxWidth: "200px" }}
-                  >
-                    {key.title}
-                  </span>
-                  <h1 className="text-sm font-bold text-right">${key.price}</h1>
-                </div>
-
-                <div className="mt-2">
-                  <h2 className="text-gray-600 text-sm">Mens Short-Sleeve</h2>
-                  <h2 className="text-gray-600 text-sm">{key.category}</h2>
-                </div>
-
-                <div className="top-2 right-1 relative">
-              {Array.isArray(key.colors) && key.colors.includes("red") && (
-              <button className="border-2 border-gray-300 ml-1 mx-1 bg-red-700 rounded-full w-6 h-6"></button>
-              )}
-              
-              {Array.isArray(key.colors) && key.colors.includes("green") && (
-              <button className="border-2 border-gray-300 ml-1 mx-1 bg-green-700 rounded-full w-6 h-6"></button>
-              )} 
-              
-              {Array.isArray(key.colors) && key.colors.includes("blue") && (
-              <button className="border-2 border-gray-300 ml-1 mx-1 bg-blue-700 rounded-full w-6 h-6"></button>
-              )}
-              
-              {Array.isArray(key.colors) && key.colors.includes("pink") && (
-              <button className="border-2 border-gray-300 ml-1 mx-1 bg-pink-700 rounded-full w-6 h-6"></button>
-              )}
-              
-              {Array.isArray(key.colors) && key.colors.includes("black") && (
-              <button className="border-2 border-gray-300 ml-1 mx-1 bg-gray-900 rounded-full w-6 h-6"></button>
-              )}
+              <div>
+                <h3 className="text-lg font-semibold truncate">{key.title}</h3>
+                <p className="text-gray-700 mt-1">${key.price}</p>
+                <p className="text-sm text-gray-500">{key.category}</p>
+                <div className="flex items-center mt-4 gap-2">
+                
+                {Array.isArray(key.colors) && key.colors.includes("red") && (
+                  <button className="border-2 border-gray-300 bg-red-700 rounded-full w-6 h-6"></button>
+                )}
+                {Array.isArray(key.colors) && key.colors.includes("green") && (
+                  <button className="border-2 border-gray-300 bg-green-700 rounded-full w-6 h-6"></button>
+                )}
+                {Array.isArray(key.colors) && key.colors.includes("blue") && (
+                  <button className="border-2 border-gray-300 bg-blue-700 rounded-full w-6 h-6"></button>
+                )}
               </div>
 
-            <div className="left-0 top-5 relative">
-            {Array.isArray(key.size) && key.size.includes('S') && <span className="border border-gray-300 px-1 mx-1">S</span>}
-            {Array.isArray(key.size) && key.size.includes('M') && <span className="border border-gray-300 px-1 mx-1">M</span>}
-            {Array.isArray(key.size) && key.size.includes('L') && <span className="border border-gray-300 px-1 mx-1">L</span>}
-            {Array.isArray(key.size) && key.size.includes('XL') && <span className="border border-gray-300 px-1 mx-1">XL</span>}
-            {Array.isArray(key.size) && key.size.includes('XXL') && <span className="border border-gray-300 px-1 mx-1">XXL</span>}
+              <div className="flex mt-2 gap-2">
+                {Array.isArray(key.size) && key.size.includes("S") && (
+                  <span className="border border-gray-300 px-2">S</span>
+                )}
+                {Array.isArray(key.size) && key.size.includes("M") && (
+                  <span className="border border-gray-300 px-2">M</span>
+                )}
+              </div>
+                
+
+              
+              </div>
             </div>
-
-
-
-              </div>
-            </div></Link>
-          ))}
-          
-        </div>
-        
+          </Link>
+        ))}
       </div>
     </section>
   );
