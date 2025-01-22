@@ -12,18 +12,18 @@ interface NavProps {
 const Nav: React.FC<NavProps> = ({ searchQuery, setSearchQuery }) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [checkUser, setCheckUser] = useState<string | undefined>("");
-  
+
   const router = useRouter();
+
   useEffect(() => {
     const user = getCookie("user") as string | undefined;
     setCheckUser(user);
-    
   }, []);
 
   const handleLogout = () => {
     deleteCookie("user");
     setCheckUser(undefined);
-    router.push('/');
+    router.push("/");
     console.log("User logged out");
   };
 
@@ -31,13 +31,13 @@ const Nav: React.FC<NavProps> = ({ searchQuery, setSearchQuery }) => {
     <section className="revert">
       <nav className="bg-white">
         {/* Top Bar */}
-        <div className="flex items-center bg-gray-100 py-3 px-6">
+        <div className="flex items-center bg-gray-100 py-3 px-4 sm:px-6">
           {/* Logo Section */}
           <div className="w-6 h-6 text-black">
             <Image
               src="/nike1.png"
               alt="Nike Logo"
-              style={{ marginLeft: "37px" }}
+              className="ml-4 sm:ml-9"
               width={19.2}
               height={18}
             />
@@ -51,9 +51,9 @@ const Nav: React.FC<NavProps> = ({ searchQuery, setSearchQuery }) => {
             <span>|</span>
             {!checkUser ? (
               <div>
-                <Link href={"/joinus"}>Join Us</Link>
+                <Link className="px-2" href={"/joinus"}>Join Us</Link>
                 <span>|</span>
-                <Link href={"/login"}>Sign in</Link>
+                <Link className="px-2" href={"/login"}>Sign in</Link>
               </div>
             ) : (
               <button onClick={handleLogout} className="text-blue-500 hover:underline">
@@ -64,13 +64,12 @@ const Nav: React.FC<NavProps> = ({ searchQuery, setSearchQuery }) => {
         </div>
 
         {/* Main Navbar */}
-        <div className="flex items-center justify-between py-4">
+        <div className="flex items-center justify-between py-4 px-4 sm:px-6">
           {/* Logo */}
           <div
             className="flex items-center justify-center"
             style={{
-              marginLeft: "38px",
-              marginTop: "-44px",
+              marginLeft: "10px",
               width: "78px",
               height: "78px",
             }}
@@ -78,7 +77,7 @@ const Nav: React.FC<NavProps> = ({ searchQuery, setSearchQuery }) => {
             <Image
               src="/nike2.png"
               alt="Nike Logo"
-              style={{ marginLeft: "10px", marginTop: "28px" }}
+              className="ml-2 sm:ml-6"
               width={59}
               height={21}
             />
@@ -113,14 +112,13 @@ const Nav: React.FC<NavProps> = ({ searchQuery, setSearchQuery }) => {
 
           {/* Desktop Links */}
           <div
-            className={`hidden sm:flex items-center gap-8 text-black transition-all ${
-              menuOpen ? "hidden" : "block"
-            }`}
+            className={`hidden sm:flex items-center gap-6 text-black transition-all`}
             style={{
               fontSize: "15px",
               fontWeight: 500,
               lineHeight: "24px",
-              marginLeft: "340px",
+              marginLeft: "auto",
+              marginRight: "28px",
             }}
           >
             <Link className="text-nowrap" href={"/"}>
@@ -139,13 +137,13 @@ const Nav: React.FC<NavProps> = ({ searchQuery, setSearchQuery }) => {
 
           {/* Search Bar */}
           <div
-            className="hidden sm:flex items-center bg-gray-100 rounded-md ml-28"
+            className="hidden sm:flex items-center bg-gray-100 rounded-md ml-auto mr-6"
             style={{ width: "192px", height: "44px" }}
           >
             <Image
               src="/search.png"
               alt="Search Icon"
-              style={{ marginLeft: "4px", marginTop: "4px" }}
+              className="ml-2"
               width={17}
               height={17}
             />
@@ -197,9 +195,27 @@ const Nav: React.FC<NavProps> = ({ searchQuery, setSearchQuery }) => {
             <Link href={"/"}>New & Featured</Link>
             <Link href={"/"}>Men</Link>
             <Link href={"/"}>Women</Link>
-            <Link href={"/"}>Kids</Link>
+            <Link href={"/Product"}>Latest Products</Link>
             <Link href={"/Product"}>Sale</Link>
-            <Link href={"/"}>SNKRS</Link>
+            <Link href={"/wishList"}>Wish List</Link>
+            <button onClick={() => (window.location.href = "/cart")}>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6 text-gray-500"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0L5 21m2-8l2.4 2H18a1 1 0 001-.8L21 5H5.4z"
+                />
+                <circle cx="7" cy="20" r="2" />
+                <circle cx="17" cy="20" r="2" />
+              </svg>
+            </button>
             <input
               type="text"
               placeholder="Search..."
