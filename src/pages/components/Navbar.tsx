@@ -13,7 +13,14 @@ const Nav: React.FC<NavProps> = ({ searchQuery, setSearchQuery }) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [checkUser, setCheckUser] = useState<string | undefined>("");
 
+  const [searchTerm,setSearchTerm] = useState('');
   const router = useRouter();
+
+  const handleSearch = ()=>{
+    if(searchTerm.trim()){
+      router.push(`/search_page?term=${encodeURIComponent(searchTerm)}`);
+    }
+  }
 
   useEffect(() => {
     const user = getCookie("user") as string | undefined;
@@ -140,17 +147,17 @@ const Nav: React.FC<NavProps> = ({ searchQuery, setSearchQuery }) => {
             className="hidden sm:flex items-center bg-gray-100 rounded-md ml-auto mr-6"
             style={{ width: "192px", height: "44px" }}
           >
-            <Image
-              src="/search.png"
-              alt="Search Icon"
-              className="ml-2"
-              width={17}
-              height={17}
-            />
+            <button onClick={handleSearch}>
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" className="mr-2">
+              <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"></circle>
+              <line x1="16.65" y1="16.65" x2="21" y2="21" stroke="currentColor" stroke-width="2" stroke-linecap="round"></line>
+            </svg>
+            
+          </button>
             <input
               type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Search..."
               className="mx-2 w-full bg-transparent outline-none text-gray-700"
             />
