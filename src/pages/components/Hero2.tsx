@@ -5,7 +5,7 @@ const Hero2: React.FC = () => {
     <div>
       {/* First Section */}
       <section className="relative mx-auto max-w-screen-xl">
-        <h1 className="text-lg font-bold mb-4">Don't Miss</h1>
+        <h1 className="text-lg font-bold mb-4">Don&#39t Miss</h1>
         <Image
           width={1344}
           height={700}
