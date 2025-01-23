@@ -1,267 +1,185 @@
-
 import Image from "next/image";
 import Footer from "./components/Footerr";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 
-
-
-interface Product{
+interface Product {
   _id: string;
   title: string;
   price: number;
-  colors:string;
-  size:string;
-  quantity:string;
-  status:string;
+  colors: string[];
+  size: string[];
+  quantity: string;
+  status: string;
   category: string;
   imageUrl: string;
   slug?: { current: string };
 }
 
 const Product: React.FC = () => {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState<string>("");
+  const [priceRange, setPriceRange] = useState<number>(1000); // Adjust according to your max price
 
-  const [item,setitem]=useState<Product[]>([]);
+  // Fetch products
+  useEffect(() => {
+    async function fetchProducts() {
+      try {
+        const res = await fetch("/api/products");
+        if (!res.ok) throw new Error("Failed to fetch products!");
 
- 
-  
-  
-  
-  
-  useEffect(()=>{
-    async function fetchitem() {
-      
-        try{
-            const res = await fetch("/api/products");
-            if(!res.ok){
-              throw new Error("Failed to fetch Products!")
-            }
-            const data:[Product]= await res.json();
-            console.log("check data",data);
-            setitem(data);
-        }
-        catch(error){
-          console.error("Error Fetching Products:",error);
-        }
+        const data: Product[] = await res.json();
+        setProducts(data);
+        setFilteredProducts(data);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
     }
-    fetchitem();
-  },[]);
+    fetchProducts();
+  }, []);
 
-
-    
+  // Filter logic
+  useEffect(() => {
+    const filtered = products.filter((product) => {
+      const categoryMatch = selectedCategory ? product.category === selectedCategory : true;
+      const priceMatch = product.price <= priceRange;
+      return categoryMatch && priceMatch;
+    });
+    setFilteredProducts(filtered);
+  }, [products, selectedCategory, priceRange]);
 
   return (
     <div>
-  <section>
-        <div className="text-black text-nowrap flex"
-         style={{height:"36px",marginLeft:"48px",marginTop:"60px"}}>
-        <h1  style={{width:"110px",height:"32px",fontSize:"24px", lineHeight:"31.2px"}}
-        >New (500)</h1>
-
-        <h1 className="text-end ml-auto mx-3">Hide Filters</h1>
-       <Image alt="image" width={24} height={24}
-       src="/filter.png"/>
-
-        
-        <button className="flex mr-24 mx-4">Sort by
-        <svg className="mt-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M6 9l6 6 6-6" />
-          <path d="M12 15V3" />
+      <section>
+        <div className="items-center mr-6 relative justify-self-end flex">
+          {/* Filter Button */}
+          <button
+            onClick={() => setIsFilterOpen(!isFilterOpen)}
+            className=" flex gap-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={2}
+              stroke="currentColor"
+              className="w-5 h-5"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L15 12.414V19a1 1 0 01-.553.894l-4 2A1 1 0 019 21v-8.586L3.293 6.707A1 1 0 013 6V4z"
+              />
             </svg>
-        </button>
-        </div>
-        
-      </section>
-      
+            <span>Filter</span>
+          </button>
 
-    <div className="flex">
+          {/* Filter Dropdown */}
+          {isFilterOpen && (
+            <div className="absolute right-0 mt-52 w-64 bg-white border border-gray-200 rounded-md shadow-lg z-10">
+              <div className="p-4 space-y-4">
+                {/* Category Filter */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Filter by Category</label>
+                  <select
+                    onChange={(e) => setSelectedCategory(e.target.value)}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                  >
+                    <option value="">All</option>
+                    <option value="shoes">Shoes</option>
+                    <option value="shirts">Shirts</option>
+                    <option value="trouser">Trousers</option>
+                  </select>
+                </div>
 
-<div className="div1">
-         
-
-
-        <section>
-          <div className="main div"
-         style={{width:"260px",height:"849px"}}>
-
-        <div  style={{width:"192px",height:"400.72px"}}>
-          <ul className="text-nowrap">
-            <li style={{fontSize:"15px",fontWeight:"500",width:"45.58px",height:"17px",marginTop:"20px", marginLeft:"46px"}}>Shoes</li>
-            <li style={{fontSize:"15px",fontWeight:"500",width:"83.79px",height:"17px",marginTop:"10px", marginLeft:"46px"}}>Tops & T-Shirts</li>
-            <li style={{fontSize:"15px",fontWeight:"500",width:"83.79px",height:"17px",marginTop:"10px", marginLeft:"46px"}}>Hoodies & SweatShirts</li>
-            <li style={{fontSize:"15px",fontWeight:"500",width:"83.79px",height:"17px",marginTop:"10px", marginLeft:"46px"}}>Jackets</li>
-            <li style={{fontSize:"15px",fontWeight:"500",width:"83.79px",height:"17px",marginTop:"10px", marginLeft:"46px"}}>Trouse & Tights</li>
-            <li style={{fontSize:"15px",fontWeight:"500",width:"83.79px",height:"17px",marginTop:"10px", marginLeft:"46px"}}>Shorts</li>
-            <li style={{fontSize:"15px",fontWeight:"500",width:"83.79px",height:"17px",marginTop:"10px", marginLeft:"46px"}}>Tracksuits</li>
-            <li style={{fontSize:"15px",fontWeight:"500",width:"83.79px",height:"17px",marginTop:"10px", marginLeft:"46px"}}>Jumpsuits & Rampers</li>
-            <li style={{fontSize:"15px",fontWeight:"500",width:"83.79px",height:"17px",marginTop:"10px", marginLeft:"46px"}}>Skirts & Dressess</li>
-            <li style={{fontSize:"15px",fontWeight:"500",width:"83.79px",height:"17px",marginTop:"10px", marginLeft:"46px"}}>Socks</li>
-            <li style={{fontSize:"15px",fontWeight:"500",width:"83.79px",height:"17px",marginTop:"10px", marginLeft:"46px"}}>Accessories & <br/>Equipments</li>
-          </ul>
-
-          <div 
-          style={{width:"192px", height:"163px",borderTop:"1px",borderBottom:"1px",borderColor:"#E5E5E5"}}>
-            
-      <div className="gender flex mt-16 ml-9">
-            <h1
-            style={{fontWeight:"bold",width:"58.03px",height:"17px",marginTop:"18px"}}>Gender</h1>
-            <Image alt="image" 
-             width={14} height={14}
-            style={{marginTop:"17px", marginLeft:"172.16px"}}
-            src="/arrow.png"
-            />
-     </div>
-
-    <div className="ml-9 mt-6 flex-col flex" style={{width: "196px", height: "80px"}}>
-            <div className="flex items-center">
-              <input className="mr-2" type="checkbox" id="men" />
-              <label htmlFor="men">Men</label>
-            </div>
-            <div className="flex items-center">
-              <input className="mr-2" type="checkbox" id="women" />
-              <label htmlFor="women">Women</label>
-            </div>
-            <div className="flex items-center">
-              <input className="mr-2" type="checkbox" id="unisex" />
-              <label htmlFor="unisex">Unisex</label>
-            </div>
-</div>
-
-
-
-<div className="Kids flex mt-16 ml-9">
-            <h1
-            style={{fontWeight:"bold",width:"58.03px",height:"17px",marginTop:"18px"}}>Kids</h1>
-            <Image alt="image" width={14} height={14}
-            style={{marginTop:"17px", marginLeft:"172.16px"}}
-            src="/arrow.png"
-            />
-     </div>
-
-    <div className="ml-9 mt-6 flex-col flex" style={{width: "196px", height: "80px"}}>
-            <div className="flex items-center">
-              <input className="mr-2" type="checkbox" id="men" />
-              <label htmlFor="men">Boy</label>
-            </div>
-            <div className="flex items-center">
-              <input className="mr-2" type="checkbox" id="women" />
-              <label htmlFor="women">Girl</label>
-            </div>
-           
-</div>
-
-
-<div className="shop by price flex mt-16 ml-9 text-nowrap">
-            <h1
-            style={{fontWeight:"bold",width:"58.03px",height:"17px",marginTop:"18px"}}>Shop by Price</h1>
-            <Image alt="image" width={14} height={14}
-            style={{marginTop:"17px", marginLeft:"172.16px"}}
-            src="/arrow.png"
-            />
-     </div>
-
-    <div className="ml-9 mt-6 flex-col flex" style={{width: "196px", height: "80px"}}>
-            <div className="flex items-center">
-              <input className="mr-2" type="checkbox" id="men" />
-              <label htmlFor="men">Under ₹ 2.500.00</label>
-            </div>
-            <div className="flex items-center">
-              <input className="mr-2" type="checkbox" id="women" />
-              <label htmlFor="women">₹ 2 501.00 - ₹</label>
-            </div>
-           
-    </div>
-
-   </div>
-  </div>
- </div>
-       </section>
-        </div>
-
-
-     <div>
-
-     <section className="item flex flex-wrap justify-start gap-1 ml-10 mt-10">
-
-{item.length === 0 ? (
-  <div className="text-center mt-44 text-4xl font-extrabold text-gray-700 w-full">
-    No items available! Stay tuned with us.
-  </div>
-) : (
-  item.map((item: Product) => (
-    <div 
-      key={item._id} 
-      className="main flex flex-col my-1 bg-white shadow-lg rounded-lg p-4 hover:shadow-2xl transition-shadow"
-      style={{ width: "315px", height: "auto" }}
-    >
-      {/* Product Image */}
-      <div className="product1">
-      <Link href={`/product_details/${item.slug?.current || ""}`}>
-                {item.imageUrl && (
-                  <Image
-                    alt={item.title}
-                    src={item.imageUrl}
-                    width={300}
-                    height={300}
-                    className="rounded"
+                {/* Price Filter */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Filter by Price</label>
+                  <input
+                    type="range"
+                    min={0}
+                    max={5000} // Adjust to your max price
+                    value={priceRange}
+                    onChange={(e) => setPriceRange(Number(e.target.value))}
+                    className="w-full"
                   />
-                )}
-              </Link>
-      </div>
-
-      {/* Product Details */}
-      <div className="product-details mt-4">
-        <h1 className="text-orange-700 font-medium text-sm">{item.status}</h1>
-        <h2 className="text-black font-semibold text-lg mt-2">{item.title}</h2>
-        <p className="text-gray-500 text-sm mt-1">{item.category}</p>
-
-        {/* Colors */}
-        <div className="colors mt-4 flex items-center">
-          {Array.isArray(item.colors) && item.colors.includes("red") && (
-            <button className="border-2 border-gray-300 mx-1 bg-red-700 rounded-full w-6 h-6"></button>
-          )}
-          {Array.isArray(item.colors) && item.colors.includes("green") && (
-            <button className="border-2 border-gray-300 mx-1 bg-green-700 rounded-full w-6 h-6"></button>
-          )}
-          {Array.isArray(item.colors) && item.colors.includes("blue") && (
-            <button className="border-2 border-gray-300 mx-1 bg-blue-700 rounded-full w-6 h-6"></button>
-          )}
-          {Array.isArray(item.colors) && item.colors.includes("pink") && (
-            <button className="border-2 border-gray-300 mx-1 bg-pink-700 rounded-full w-6 h-6"></button>
-          )}
-          {Array.isArray(item.colors) && item.colors.includes("black") && (
-            <button className="border-2 border-gray-300 mx-1 bg-gray-900 rounded-full w-6 h-6"></button>
+                  <p>Up to ₹{priceRange}</p>
+                </div>
+              </div>
+            </div>
           )}
         </div>
+      </section>
 
-        {/* Sizes */}
-        <div className="sizes mt-4 flex items-center">
-          {Array.isArray(item.size) && item.size.includes('S') && <span className="border border-gray-300 px-2 py-1 mx-1 text-sm rounded">S</span>}
-          {Array.isArray(item.size) && item.size.includes('M') && <span className="border border-gray-300 px-2 py-1 mx-1 text-sm rounded">M</span>}
-          {Array.isArray(item.size) && item.size.includes('L') && <span className="border border-gray-300 px-2 py-1 mx-1 text-sm rounded">L</span>}
-          {Array.isArray(item.size) && item.size.includes('XL') && <span className="border border-gray-300 px-2 py-1 mx-1 text-sm rounded">XL</span>}
-          {Array.isArray(item.size) && item.size.includes('XXL') && <span className="border border-gray-300 px-2 py-1 mx-1 text-sm rounded">XXL</span>}
+      {/* Product Display */}
+      <div className="flex flex-wrap">
+        <div className="w-full sm:w-1/4 md:w-1/6 p-4">
+          <section>
+            <div className="main" style={{ width: "100%", height: "849px" }}>
+              <div className="border-t border-b border-gray-300 py-4">
+                <ul className="text-sm space-y-2">
+                  <li>Shoes</li>
+                  <li>Tops & T-Shirts</li>
+                  <li>Hoodies & Sweatshirts</li>
+                  <li>Jackets</li>
+                  <li>Trousers & Tights</li>
+                  <li>Shorts</li>
+                  <li>Tracksuits</li>
+                  <li>Jumpsuits & Rompers</li>
+                  <li>Skirts & Dresses</li>
+                  <li>Socks</li>
+                  <li>Accessories & Equipment</li>
+                </ul>
+              </div>
+            </div>
+          </section>
         </div>
 
-        {/* Price */}
-        <h3 className="text-black font-semibold text-md mt-4">MRP: $ {item.price}</h3>
+        <div className="w-full sm:w-3/4 md:w-4/5 px-4">
+          <section className="flex flex-wrap justify-start gap-0 mt-10">
+            {filteredProducts.length === 0 ? (
+              <div className="text-center text-xl font-extrabold text-gray-700 w-fit">
+                No items available! Stay tuned with us.
+              </div>
+            ) : (
+              filteredProducts.map((product) => (
+                <div
+                  key={product._id}
+                  className="flex flex-col my-4 bg-white shadow-lg rounded-lg p-4 hover:shadow-2xl transition-shadow w-full sm:w-1/2 lg:w-1/3 xl:w-1/4"
+                >
+                  {/* Product Image */}
+                  <div>
+                    <Link href={`/product_details/${product.slug?.current || ""}`}>
+                      {product.imageUrl && (
+                        <Image
+                          alt={product.title}
+                          src={product.imageUrl}
+                          width={300}
+                          height={300}
+                          className="rounded"
+                        />
+                      )}
+                    </Link>
+                  </div>
+
+                  {/* Product Details */}
+                  <div className="mt-4">
+                    <h1 className="text-orange-700 font-medium text-sm">{product.status}</h1>
+                    <h2 className="text-black font-semibold text-lg mt-2">{product.title}</h2>
+                    <p className="text-gray-500 text-sm mt-1">{product.category}</p>
+                    <h3 className="text-black font-semibold text-md mt-4">MRP: ₹{product.price}</h3>
+                  </div>
+                </div>
+              ))
+            )}
+          </section>
+        </div>
       </div>
+
+      <Footer />
     </div>
-  ))
-)}
-</section>
-
-
-</div>
-
-
-</div>
-
-<Footer/>
-
-</div>
-    
-    
   );
 };
 
