@@ -18,15 +18,19 @@ interface Wish {
 export default function WishList() {
   const [products, setProducts] = useState<Wish[]>([]);
   const router = useRouter();
-  
-  useEffect(() => {
 
+  useEffect(() => {
+    const user = getCookie("user") as string | undefined;
+
+    // Check if user is logged in
+    if (!user) {
+      router.push("/login");
+    }
+  }, [router]);
+
+  useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const user = getCookie("user") as string | undefined;// Check if user data exists in localStorage
-        if(!user){
-          router.push('/login');
-        }
         const res = await fetch("/api/wish");
         if (!res.ok) {
           throw new Error("Failed to fetch products");
@@ -37,6 +41,7 @@ export default function WishList() {
         console.error("Error fetching products:", error);
       }
     };
+
     fetchProducts();
   }, []);
 
@@ -59,13 +64,17 @@ export default function WishList() {
     }
   };
 
-        const calculateSubtotal=()=>{
-          let subTotal =0;
-          products.forEach(item=>{
-            subTotal +=item.price;
-          });
-          return subTotal;
-        }
+  const calculateSubtotal = () => {
+    let subTotal = 0;
+    products.forEach((item) => {
+      subTotal += item.price;
+    });
+    return subTotal;
+  };
+
+  if (!products.length) {
+    return <div>Loading your wishlist...</div>; // Fallback for empty products
+  }
 
   return (
     <div className="flex flex-col lg:flex-row gap-8 mt-10 relative">
@@ -106,38 +115,38 @@ export default function WishList() {
                 </div>
 
                 <div className="flex items-center gap-4">
-                  <p className="font-medium top-0 relative text-gray-800">Size: {item.size}</p>
+                  <p className="font-medium top-0 relative text-gray-800">
+                    Size: {item.size}
+                  </p>
                   <p className="text-sm">
                     Quantity: <span className="font-semibold">1</span>
                   </p>
 
                   <div className="flex items-center space-x-2">
-
-                  {/*this is also simple and alternate way to render colors the 
-                  other ways we have used in slider and product page */}
-                  <span className="font-semibold top-0 relative text-gray-700">Color:</span>
-             <div className="right-1 top-1 relative">
-              {Array.isArray(item.colors) && item.colors.includes("red") && (
-              <button className="border-2 border-gray-300 ml-1 mx-1 bg-red-700 rounded-full w-6 h-6"></button>
-              )}
-              
-              {Array.isArray(item.colors) && item.colors.includes("green") && (
-              <button className="border-2 border-gray-300 ml-1 mx-1 bg-green-700 rounded-full w-6 h-6"></button>
-              )} 
-              
-              {Array.isArray(item.colors) && item.colors.includes("blue") && (
-              <button className="border-2 border-gray-300 ml-1 mx-1 bg-blue-700 rounded-full w-6 h-6"></button>
-              )}
-              
-              {Array.isArray(item.colors) && item.colors.includes("pink") && (
-              <button className="border-2 border-gray-300 ml-1 mx-1 bg-pink-700 rounded-full w-6 h-6"></button>
-              )}
-              
-              {Array.isArray(item.colors) && item.colors.includes("black") && (
-              <button className="border-2 border-gray-300 ml-1 mx-1 bg-gray-900 rounded-full w-6 h-6"></button>
-              )}
-              </div>
-
+                    <span className="font-semibold top-0 relative text-gray-700">
+                      Color:
+                    </span>
+                    <div className="right-1 top-1 relative">
+                      {Array.isArray(item.colors) && item.colors.includes("red") && (
+                        <button className="border-2 border-gray-300 ml-1 mx-1 bg-red-700 rounded-full w-6 h-6"></button>
+                      )}
+                      {Array.isArray(item.colors) &&
+                        item.colors.includes("green") && (
+                          <button className="border-2 border-gray-300 ml-1 mx-1 bg-green-700 rounded-full w-6 h-6"></button>
+                        )}
+                      {Array.isArray(item.colors) &&
+                        item.colors.includes("blue") && (
+                          <button className="border-2 border-gray-300 ml-1 mx-1 bg-blue-700 rounded-full w-6 h-6"></button>
+                        )}
+                      {Array.isArray(item.colors) &&
+                        item.colors.includes("pink") && (
+                          <button className="border-2 border-gray-300 ml-1 mx-1 bg-pink-700 rounded-full w-6 h-6"></button>
+                        )}
+                      {Array.isArray(item.colors) &&
+                        item.colors.includes("black") && (
+                          <button className="border-2 border-gray-300 ml-1 mx-1 bg-gray-900 rounded-full w-6 h-6"></button>
+                        )}
+                    </div>
                   </div>
                 </div>
 
@@ -155,9 +164,7 @@ export default function WishList() {
                         strokeWidth="1.5"
                         className="w-6 h-6"
                       >
-                        <path
-                          d="M12 21s-7-4.434-7-11a5 5 0 0 1 9-3 5 5 0 0 1 9 3c0 6.566-7 11-7 11z"
-                        />
+                        <path d="M12 21s-7-4.434-7-11a5 5 0 0 1 9-3 5 5 0 0 1 9 3c0 6.566-7 11-7 11z" />
                       </svg>
                     </button>
 
