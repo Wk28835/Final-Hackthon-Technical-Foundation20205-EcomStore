@@ -186,6 +186,7 @@ export async function getStaticProps(context: GetStaticPropsContext) {
     title,
     price,
     quantity,
+    size,
     colors,
     status,
     category,
