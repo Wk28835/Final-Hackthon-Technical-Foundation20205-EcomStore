@@ -25,15 +25,22 @@ if(req.method === "GET"){
   
   res.status(200).json(cartItems);
 }
-  if(req.method === "DELETE"){
-    const {cartId}= req.body;
-    if(!cartId){
-      return res.status(400).json({message:"Product ID is required!"})
-    }
-    else{
-      return res.status(200).json({message:"Product Deleted Success!"})
+if (req.method === "DELETE") {
+  const { cartId } = req.body;
 
-    }
+  if (!cartId) {
+    return res.status(400).json({ message: "Product ID is required!" });
   }
-  return res.status(405).json({error:"Method Not Allowed!"});
+
+  try {
+    // Perform the delete operation in Sanity
+    await sanityClient.delete(cartId);
+
+    return res.status(200).json({ message: "Product Deleted Successfully!" });
+  } catch  {
+    return res.status(500).json({ message: "Failed to delete product!" });
+  }
+}
+
+return res.status(405).json({ error: "Method Not Allowed!" });
 }
