@@ -21,7 +21,7 @@ export default function WishList() {
 
   useEffect(() => {
     const user = getCookie("user") as string | undefined;
-
+    console.log("check user",user);
     // Check if user is logged in
     if (!user) {
       router.push("/login");
