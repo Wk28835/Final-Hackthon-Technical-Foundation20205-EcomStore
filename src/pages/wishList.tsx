@@ -1,7 +1,9 @@
+import sanityClient from "@/sanity/lib/client";
 import { getCookie } from "cookies-next";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 interface Wish {
   _id: string;
@@ -46,6 +48,37 @@ export default function WishList() {
 
     fetchProducts();
   }, []);
+
+  const handleAddToCart = async (item:Wish):Promise<void> => {   
+    
+     
+    const user = getCookie("user") as string | undefined;// Check if user data exists in localStorage
+   
+    if (!user) {
+         router.push('/login'); // Redirect to login if not authenticated
+   }
+
+   else{
+      
+   try {
+     await sanityClient.create({
+       _type: "cart",
+       title: item.title,
+       price: item.price,
+       quantity: 1,
+       colors: item.colors,
+       status:item.status,
+       size:item.size,
+       category:item.category,
+       image:item.image,
+     });
+     
+     toast.success("Product Added to Cart!")
+   } catch {
+     toast.error("Failed to Add Product")
+   }
+}  
+}; 
 
   const handleRemoveItem = async (itemId: string): Promise<void> => {
     try {
@@ -171,22 +204,18 @@ export default function WishList() {
                     </button>
 
                     <button
+            onClick={() => handleAddToCart(item)}
+            className="mt-2 bg-black text-white px-3 py-1 rounded-lg shadow-md hover:bg-gray-800 transition duration-200"
+          >
+            Add to Cart
+          </button>
+
+                    <button
                       onClick={() => handleRemoveItem(item._id)}
-                      className="text-red-600 hover:text-red-800"
-                    >Delete
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth="1.5"
-                        className="w-6 h-6"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M6 8.25v10.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 18.75V8.25M9.75 12v4.5m4.5-4.5v4.5M4.5 6.75h15M10.5 6.75V5.25a1.5 1.5 0 011.5-1.5h0a1.5 1.5 0 011.5 1.5v1.5m-6 0h6"
-                        />
-                      </svg>
+                      className="text-white bg-red-500 rounded px-3 py-1 hover:text-red-800">Delete
+                      
+                       
+                      
                     </button>
                   </div>
                 </div>
@@ -209,12 +238,7 @@ export default function WishList() {
           </div>
         </div>
 
-        <button
-          onClick={() => (window.location.href = "/checkout")}
-          className="w-full mt-4 py-2 bg-black text-white rounded-md hover:bg-gray-800"
-        >
-          Member Checkout
-        </button>
+       
       </section>
     </div>
   );
