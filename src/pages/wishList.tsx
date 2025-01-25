@@ -3,7 +3,7 @@ import { getCookie } from "cookies-next";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 
 interface Wish {
   _id: string;
@@ -72,8 +72,19 @@ export default function WishList() {
        category:item.category,
        image:item.image,
      });
-     
      toast.success("Product Added to Cart!")
+
+     //delete product from wish list after adding to cart
+     const response = await fetch("/api/wish", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ itemId:item._id }),
+    });
+    if (response.ok) {
+      setProducts((prevProducts)=>prevProducts.filter((product)=>product._id!==item._id))
+      }
+     
+     
    } catch {
      toast.error("Failed to Add Product")
    }
@@ -113,6 +124,7 @@ export default function WishList() {
 
   return (
     <div className="flex flex-col lg:flex-row gap-8 mt-10 relative">
+      <ToastContainer />
       <section className="lg:w-2/3 bg-gray-100 p-4 rounded-md shadow-sm">
         <div className="mb-4 flex justify-between items-center p-4 bg-white rounded-md shadow-md">
           <div>
