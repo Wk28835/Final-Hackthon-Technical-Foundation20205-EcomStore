@@ -30,6 +30,7 @@ if(req.method === "GET"){
       return res.status(400).json({message:"Product ID is required!"})
     }
     else{
+      await sanityClient.delete(itemId);
       return res.status(200).json({message:"Product Deleted Success!"})
 
     }
