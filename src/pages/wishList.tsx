@@ -24,11 +24,13 @@ export default function WishList() {
     console.log("check user",user);
     // Check if user is logged in
     if (!user) {
+      
       router.push("/login");
     }
   }, [router]);
 
   useEffect(() => {
+    
     const fetchProducts = async () => {
       try {
         const res = await fetch("/api/wish");
@@ -47,7 +49,7 @@ export default function WishList() {
 
   const handleRemoveItem = async (itemId: string): Promise<void> => {
     try {
-      const response = await fetch("/api/cart", {
+      const response = await fetch("/api/wish", {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ itemId }),
@@ -171,7 +173,7 @@ export default function WishList() {
                     <button
                       onClick={() => handleRemoveItem(item._id)}
                       className="text-red-600 hover:text-red-800"
-                    >
+                    >Delete
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
