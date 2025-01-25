@@ -72,34 +72,36 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
 }  
 }; 
   
-  const handleAddToWish = async () => {
-    const user = localStorage.getItem('user'); // Check if user data exists in localStorage
+const handleAddToWish = async () => {   
     
-     if (!user) {
-          router.push('/login'); // Redirect to login if not authenticated
-    }
-        
-    else{
-      
-    try {
-      await sanityClient.create({
-        _type: "wish",
-        title: product.title,
-        price: product.price,
-        quantity: 1,
-        colors: product.colors,
-        status: product.status,
-        size:product.size,
-        category: product.category,
-        image: product.imageUrl,
-      });
-      window.alert("Product added to Wish List!");
-    } catch {
-      window.alert("Failed to add product to Wish List!");
-    }
-  }
-  
-  };
+     
+  const user = getCookie("user") as string | undefined;// Check if user data exists in localStorage
+ 
+  if (!user) {
+       router.push('/login'); // Redirect to login if not authenticated
+ }
+
+ else{
+    
+ try {
+   await sanityClient.create({
+     _type: "wish",
+     title: product.title,
+     price: product.price,
+     quantity: 1,
+     colors: productData.color,
+     status: product.status,
+     size:productData.size,
+     category: product.category,
+     image: product.imageUrl,
+   });
+   
+   toast.success("Product Added to Wish List!")
+ } catch {
+   toast.error("Failed to Add to Wish List!")
+ }
+}  
+}; 
 
   return (
     <div>
