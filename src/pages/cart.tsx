@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Flip, toast, ToastContainer } from "react-toastify";
-import { AiFillMinusCircle, AiFillPlusCircle} from 'react-icons/ai';
+import { AiFillMinusCircle, AiFillPlusCircle } from 'react-icons/ai';
 interface Cart {
   _id: string;
   title: string;
@@ -141,41 +141,30 @@ export default function Cart() {
                     <p  className="text-gray-600 mt-1 text-sm">Quantity: </p>
                    <button onClick={()=>handleDecrese(item._id)} className="pl-6 "><AiFillMinusCircle/></button>  <span id="quantity" className="">{item.quantity}</span><button onClick={()=>handleIncrease(item._id)}><AiFillPlusCircle/></button>
                   </div>
-                  <div className="bottom-0 right-2 relative">
-                    {Array.isArray(item.colors) && item.colors.includes("red") && (
+                  <span>Color:</span>
+                  <div className="bottom-6 left-12 relative">
+                    {item.colors && item.colors.includes("red") && (
                       <button className="border-2 border-gray-300 ml-1 mx-1 bg-red-700 rounded-full w-6 h-6"></button>
                     )}
 
-                    {Array.isArray(item.colors) && item.colors.includes("green") && (
+                    {item.colors && item.colors.includes("green") && (
                       <button className="border-2 border-gray-300 ml-1 mx-1 bg-green-700 rounded-full w-6 h-6"></button>
                     )}
 
-                    {Array.isArray(item.colors) && item.colors.includes("blue") && (
+                    {item.colors && item.colors.includes("blue") && (
                       <button className="border-2 border-gray-300 ml-1 mx-1 bg-blue-700 rounded-full w-6 h-6"></button>
                     )}
 
-                    {Array.isArray(item.colors) && item.colors.includes("pink") && (
+                    {item.colors && item.colors.includes("pink") && (
                       <button className="border-2 border-gray-300 ml-1 mx-1 bg-pink-700 rounded-full w-6 h-6"></button>
                     )}
 
-                    {Array.isArray(item.colors) && item.colors.includes("black") && (
+                    {item.colors && item.colors.includes("black") && (
                       <button className="border-2 border-gray-300 ml-1 mx-1 bg-gray-900 rounded-full w-6 h-6"></button>
                     )}
                   </div>
-                  <div className="gap-2 flex justify-between mt-4">
-                    <button>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="black"
-                        strokeWidth="1"
-                        className="w-6 h-6">
-                        <path
-                          d="M12 21s-7-4.434-7-11a5 5 0 0 1 9-3 5 5 0 0 1 9 3c0 6.566-7 11-7 11z"
-                        />
-                      </svg>
-                    </button>
+                  <div className="gap-1  relative flex justify-between bottom-6">
+                    
                     <button onClick={() => handleRemoveCart(item._id)} className="rounded hover:bg-gray-100 text-red-600">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
