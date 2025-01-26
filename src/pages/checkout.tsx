@@ -57,8 +57,8 @@ const Checkout: React.FC = () => {
 
   return (
     <div>
-      <div className="parent_div flex" style={{ width: "880px", height: "1150px", left: "289px", position: "relative" }}>
-        <section style={{ width: "440px", height: "2206px", top: "2px", position: "relative" }}>
+      <div className="parent_div flex" style={{ width: "880px", height: "650px", left: "289px", position: "relative" }}>
+        <section style={{ width: "440px", height: "200px", top: "2px", position: "relative" }}>
           <h1 className="text-xl font-medium" style={{ width: "379px", height: "24px", top: "70px", position: "relative" }}>
             How would you like to get your order?
           </h1>
