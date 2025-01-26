@@ -42,33 +42,49 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
 
   const handleAddToCart = async () => {
     const user = getCookie("user") as string | undefined;
-    
+  
     if (!user) {
       router.push("/login");
-    } else {
-      if (!productData.size || !productData.color) {
-        toast.warn("Please Select Color and Size to Proceed!");
-        return;
-      }
-      try {
-        await sanityClient.create({
-          _type: "cart",
+      return;
+    }
+  
+    if (!productData.size || !productData.color) {
+      toast.warn("Please select color and size to proceed!");
+      return;
+    }
+    console.log("check color and size",productData.color,productData.size)
+  
+    try {
+      const response = await fetch("/api/cart", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          
           title: product.title,
           price: product.price,
-          quantity: 1,
+          quantity: 1, // Default to 1 or allow user input
           colors: productData.color,
           status: product.status,
           size: productData.size,
           category: product.category,
           image: product.imageUrl,
-        });
-        toast.success("Product Added to Cart!");
-      } catch {
-        toast.error("Failed to Add Product");
+        }),
+      });
+  
+      const res = await response.json();
+  
+      if (response.ok) {
+        toast.success("Product added to cart!");
+      } else {
+        toast.error(res.message || "Failed to add product to cart!");
       }
+    } catch (error) {
+      toast.error("Failed to fetch product to cart");
     }
   };
-
+  
   const handleAddToWish = async () => {
     const user = getCookie("user") as string | undefined;
     if (!user) {
