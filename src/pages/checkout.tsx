@@ -1,6 +1,9 @@
 import { ShoppingBag } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { Elements } from '@stripe/react-stripe-js';
+import  { loadStripe }  from '@stripe/stripe-js';
+import PaymentForm from "./PaymentForm";
 
 interface Cart {
   _id: string;
@@ -14,8 +17,10 @@ interface Cart {
   image: string;
   slug?: { current: string };
 }
-
+const stripePromise = loadStripe('env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY');
 const Checkout: React.FC = () => {
+  const [showCard,setShowCard]=useState(false);
+  const [clientSecret, setClientSecret] = useState('');
   const [product, setProducts] = useState<Cart[]>([]);
   const [formData, setFormData] = useState({
     first_Name: "",
@@ -57,13 +62,48 @@ const Checkout: React.FC = () => {
         throw new Error("Failed to submit the form");
       }
 
-      const result = await response.json();
-      console.log("Success:", result);
-      alert("Form submitted successfully!");
+      alert("Form submitted successfully! Please Proceed to Payment Details");
+
+       setShowCard(true);
+       handlePayment();
+
+      setFormData({
+        first_Name: "",
+        last_Name: "",
+        address_1: "",
+        address_2: "",
+        city: "",
+        phone: "",
+        email: "",
+        postal_code: "",
+      });
+      
       
     } catch (error) {
       console.error("Error:", error);
       alert("There was an error submitting the form.");
+    }
+  };
+
+
+  const handlePayment = async () => {
+    try {
+      const response = await fetch("/api/create-payment-intent", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ amount: Math.round(calculateSubtotal() * 100) }), // Stripe expects amount in cents
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to create payment intent");
+      }
+
+      const { clientSecret } = await response.json();
+      setClientSecret(clientSecret); // Set clientSecret for Stripe
+    } catch (error) {
+      console.error("Error creating payment intent:", error);
     }
   };
 
@@ -92,6 +132,12 @@ const Checkout: React.FC = () => {
     });
     return subTotal;
   };
+
+
+  //below code is for stripe function used in Paywithcard button and submit form
+
+  
+  
 
   return (
     <div className="flex justify-center items-center py-10">
@@ -200,7 +246,7 @@ const Checkout: React.FC = () => {
           <h1 className="font-medium text-xl">Order Summary</h1>
           <div className="mt-4">
             <p className="text-gray-600 text-sm">SubTotal</p>
-            <p className="text-gray-500 text-sm mt-2">₹ {calculateSubtotal()}</p>
+            <p id="subTotal" className="text-gray-500 text-sm mt-2">₹ {calculateSubtotal()}</p>
             <p className="text-gray-500 text-sm mt-4">Delivery/Shipping</p>
             <p className="text-gray-600 text-sm mt-2">Free</p>
             <div className="border-t mt-4 pt-2">
@@ -229,6 +275,13 @@ const Checkout: React.FC = () => {
               </div>
             </div>
           ))}
+          {showCard && clientSecret && (
+        <Elements stripe={stripePromise}>
+          <PaymentForm clientSecret={clientSecret}amount={Math.round(calculateSubtotal() * 100)} 
+          />
+        </Elements>
+        
+      )}
         </section>
       </div>
     </div>
