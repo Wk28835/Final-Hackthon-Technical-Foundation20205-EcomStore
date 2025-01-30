@@ -7,6 +7,6 @@ const sanityClient = createClient({
   dataset:"production",
   apiVersion,
   useCdn: true,
-  token:"skj2Js3hygUf7H6s3sgT34zrxoewdnr9B5uW62SiS3pugONyC1u09CrZilXEmzGpGE0dX17NBhdF3nWuVn55FREQlUYEt653qvMH5KlEgysTtAPCdF53npikHfRo9JreA2DUtVH5zjtxftqnTtldvcbUu3SaYAzdIWuC1ZqnjjAt2QSSR5jt"
+  token:"sk3e8CFcZPizQLDnlfsjibLdoou5xMgsPubHlFfF4KgCgRksJDtJM4XQAkgj3kyZbu4OxKDDOm12GS6lGnRmkYgs05OnJApRuRHdM8JPMiwtglr72UpQ0C3QU2DnvqN2p4vWNBjVOKeIWBVO3GtS6t8L1A1jQU4c3kI1JHvHE37ogmP6618y"
 })
 export default sanityClient;
