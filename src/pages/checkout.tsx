@@ -5,7 +5,6 @@ import { loadStripe } from "@stripe/stripe-js";
 import dynamic from "next/dynamic";
 import { toast, ToastContainer } from "react-toastify";
 
-
 interface Cart {
   _id: string;
   title: string;
@@ -22,7 +21,7 @@ interface Cart {
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
 // Dynamically import PaymentForm with SSR disabled
-const PaymentForms = dynamic(() => import("./components/PaymentForm"), {
+const PaymentForm = dynamic(() => import("./PaymentForm"), {
   ssr: false,
 });
 
@@ -296,7 +295,7 @@ const Checkout: React.FC = () => {
           </div>
           {clientSecret && (
             <Elements stripe={stripePromise} options={{ clientSecret }}>
-              <PaymentForms
+              <PaymentForm
                 clientSecret={clientSecret}
                 amount={Math.round(calculateSubtotal() * 100)}
                 onPaymentSuccess={deleteAllCartItems}
