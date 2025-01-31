@@ -52,7 +52,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
       toast.warn("Please select color and size to proceed!");
       return;
     }
-    console.log("check color and size",productData.color,productData.size)
+    
   
     try {
       const response = await fetch("/api/cart", {
@@ -80,7 +80,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
       } else {
         toast.error(res.message || "Failed to add product to cart!");
       }
-    } catch (error) {
+    } catch {
       toast.error("Failed to fetch product to cart");
     }
   };
