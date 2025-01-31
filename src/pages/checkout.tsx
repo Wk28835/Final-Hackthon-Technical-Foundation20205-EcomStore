@@ -1,9 +1,8 @@
-
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
-import PaymentForm from "./PaymentForm";
+import dynamic from "next/dynamic";
 import { toast, ToastContainer } from "react-toastify";
 
 interface Cart {
@@ -20,6 +19,11 @@ interface Cart {
 }
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
+
+// Dynamically import PaymentForm with SSR disabled
+const PaymentForm = dynamic(() => import("./PaymentForm"), {
+  ssr: false,
+});
 
 const Checkout: React.FC = () => {
   const [showCard, setShowCard] = useState(false);
@@ -146,18 +150,15 @@ const Checkout: React.FC = () => {
       console.error("Error creating payment intent:", error);
     }
   };
-  //below function will tured the setshowcard to false if the text of button is "cash on delivery" and
-  //similary it will tured setshowcard to true if the button text is "paynow"
-   // Toggle showCard state
-   const handleCod = () => {
+
+  // Toggle showCard state
+  const handleCod = () => {
     setShowCard((prevShowCard) => !prevShowCard); // Toggle showCard state
   };
 
-  //this below delete cart item function will be allocated to paymentform so that items will be deleted
-  //after payment success indication comes from payment form component
+  // Delete all cart items after payment success
   const deleteAllCartItems = async () => {
     try {
-      // Iterate over each product in the cart and delete it
       await Promise.all(
         products.map(async (product) => {
           const response = await fetch("/api/cart", {
@@ -165,13 +166,13 @@ const Checkout: React.FC = () => {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ cartId: product._id }), // Send the cart item ID to delete
           });
-  
+
           if (!response.ok) {
             throw new Error(`Failed to delete product with ID: ${product._id}`);
           }
         })
       );
-  
+
       // Clear the products state after all items are deleted
       setProducts([]);
       toast.success("All items removed from the cart!");
@@ -206,7 +207,7 @@ const Checkout: React.FC = () => {
 
   return (
     <div className="flex justify-center items-center py-10">
-      <ToastContainer/>
+      <ToastContainer />
       <div className="max-w-4xl flex gap-10">
         {/* Left Section */}
         <section className="w-1/2 space-y-4">
@@ -292,19 +293,24 @@ const Checkout: React.FC = () => {
             <p>Delivery: Free</p>
             <p>Total: ₹{calculateSubtotal()}</p>
           </div>
-          {showCard && clientSecret && (
-            <Elements stripe={stripePromise}>
-              <PaymentForm clientSecret={clientSecret} amount={Math.round(calculateSubtotal() * 100)}
-              onPaymentSuccess={deleteAllCartItems} />
+          {clientSecret && (
+            <Elements stripe={stripePromise} options={{ clientSecret }}>
+              <PaymentForm
+                clientSecret={clientSecret}
+                amount={Math.round(calculateSubtotal() * 100)}
+                onPaymentSuccess={deleteAllCartItems}
+              />
             </Elements>
           )}
-          
-        {( clientSecret && <button onClick={handleCod}
-              className="px-4 my-4 py-2 rounded-md left-64 bottom-14 relative bg-orange-500">
-              {showCard ? "Cash On Delivery" : "Pay Now"}  </button> )}
-
+          {clientSecret && (
+            <button
+              onClick={handleCod}
+              className="px-4 my-4 py-2 rounded-md left-64 bottom-14 relative bg-orange-500"
+            >
+              {showCard ? "Cash On Delivery" : "Pay Now"}
+            </button>
+          )}
         </section>
-        
       </div>
     </div>
   );
