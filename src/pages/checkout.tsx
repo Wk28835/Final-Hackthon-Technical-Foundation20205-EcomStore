@@ -1,9 +1,8 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { Elements } from "@stripe/react-stripe-js";
-import { loadStripe } from "@stripe/stripe-js";
-import dynamic from "next/dynamic";
 import { toast, ToastContainer } from "react-toastify";
+
+import { loadStripe } from "@stripe/stripe-js";
 
 interface Cart {
   _id: string;
@@ -18,16 +17,7 @@ interface Cart {
   slug?: { current: string };
 }
 
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
-
-// Dynamically import PaymentForm with SSR disabled
-const PaymentForm = dynamic(() => import("./PaymentForm"), {
-  ssr: false,
-});
-
 const Checkout: React.FC = () => {
-  const [showCard, setShowCard] = useState(false);
-  const [clientSecret, setClientSecret] = useState("");
   const [products, setProducts] = useState<Cart[]>([]);
   const [formData, setFormData] = useState({
     first_Name: "",
@@ -39,6 +29,7 @@ const Checkout: React.FC = () => {
     email: "",
     postal_code: "",
   });
+  
 
   // Handle form field changes
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -128,58 +119,35 @@ const Checkout: React.FC = () => {
     }
   };
 
-  // Create a payment intent
+  // Create a payment intent and redirect to Stripe Checkout
   const handlePayment = async () => {
     try {
-      const response = await fetch("/api/create-payment-intent", {
+      const response = await fetch("/api/create-checkout-session", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ amount: Math.round(calculateSubtotal() * 100) }), // Stripe expects amount in cents
+        body: JSON.stringify({ amount: Math.round(calculateSubtotal() * 100) }), // Amount in paise
       });
 
       if (!response.ok) {
         throw new Error("Failed to create payment intent");
       }
 
-      const { clientSecret } = await response.json();
-      setClientSecret(clientSecret); // Set clientSecret for Stripe
-      setShowCard(true); // Show the payment form
+      const { id } = await response.json();
+
+      // Redirect to Stripe Checkout
+      const stripe = await loadStripe('pk_test_51PjmlAI1ZwiCwOOmKNKOu24TcCOmvdU27219vWbYjlitVTWXrskrayJSZ59A78PPjlCruREKncNQhq5R80zdp0XG00oy7aeGmT');
+      await stripe?.redirectToCheckout({ sessionId: id });
     } catch (error) {
       console.error("Error creating payment intent:", error);
+      toast.error("Failed to proceed to payment.");
     }
   };
 
   // Toggle showCard state
   const handleCod = () => {
-    setShowCard((prevShowCard) => !prevShowCard); // Toggle showCard state
-  };
-
-  // Delete all cart items after payment success
-  const deleteAllCartItems = async () => {
-    try {
-      await Promise.all(
-        products.map(async (product) => {
-          const response = await fetch("/api/cart", {
-            method: "DELETE",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ cartId: product._id }), // Send the cart item ID to delete
-          });
-
-          if (!response.ok) {
-            throw new Error(`Failed to delete product with ID: ${product._id}`);
-          }
-        })
-      );
-
-      // Clear the products state after all items are deleted
-      setProducts([]);
-      toast.success("All items removed from the cart!");
-    } catch (error) {
-      console.error("Error removing cart items:", error);
-      toast.error("Failed to remove items from the cart.");
-    }
+    toast.success("Order Placed Success! You will be informed Shortly");
   };
 
   // Fetch cart products on component mount
@@ -293,23 +261,20 @@ const Checkout: React.FC = () => {
             <p>Delivery: Free</p>
             <p>Total: ₹{calculateSubtotal()}</p>
           </div>
-          {clientSecret && (
-            <Elements stripe={stripePromise} options={{ clientSecret }}>
-              <PaymentForm
-                clientSecret={clientSecret}
-                amount={Math.round(calculateSubtotal() * 100)}
-                onPaymentSuccess={deleteAllCartItems}
-              />
-            </Elements>
-          )}
-          {clientSecret && (
-            <button
-              onClick={handleCod}
-              className="px-4 my-4 py-2 rounded-md left-64 bottom-14 relative bg-orange-500"
-            >
-              {showCard ? "Cash On Delivery" : "Pay Now"}
-            </button>
-          )}
+
+          <button
+            onClick={handlePayment}
+            className="px-4 my-4 py-2 rounded-md left-64 bottom-14 relative bg-green-500"
+          >
+            Pay Now
+          </button>
+
+          <button
+            onClick={handleCod}
+            className="px-4 my-4 py-2 rounded-md left-64 bottom-14 relative bg-orange-500"
+          >
+            Cash On Delivery
+          </button>
         </section>
       </div>
     </div>
