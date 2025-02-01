@@ -4,6 +4,13 @@ export default {
     title:'MyWishList',
     fields:[
         {
+            
+            name:'user',
+            type:'string',
+            title:'User',
+        },
+        {
+
             name:'title',
             type:'string',
             title:'Title',
@@ -16,14 +23,14 @@ export default {
         {
             name:'colors',
             title:'Colors',
-            type:'array',
-            of:[{type:'string'}]
+            type:'string',
+            
         }, 
         {
             name:'size',
             title:'Size',
-            type:'array',
-            of:[{type:'string'}]
+            type:'string',
+            
         },
         {
             name: 'status',
