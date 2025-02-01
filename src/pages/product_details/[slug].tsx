@@ -14,8 +14,8 @@ interface ProductDetailsProps {
     price: number;
     quantity: number;
     category: string;
-    colors: string[];
-    size: string[];
+    colors: string[] | null; // Handle null or undefined values
+    size: string[] | null; // Handle null or undefined values
     status: string;
     imageUrl: string;
   } | null;
@@ -24,10 +24,20 @@ interface ProductDetailsProps {
 export default function ProductDetails({ product }: ProductDetailsProps) {
   const router = useRouter();
 
+  // Handle the fallback state (when `product` is null)
   const [productData, setProductData] = useState({
     size: product?.size?.[0] || "",
     color: product?.colors?.[0] || "",
   });
+
+  // Handle the loading state for fallback
+  if (router.isFallback) {
+    return (
+      <div className="text-center py-20">
+        <h1 className="text-4xl font-bold text-gray-800">Loading...</h1>
+      </div>
+    );
+  }
 
   if (!product) {
     return (
@@ -42,18 +52,18 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
 
   const handleAddToCart = async () => {
     const user = getCookie("user") as string | undefined;
-  
+
     if (!user) {
       router.push("/login");
       return;
     }
-  
+
     if (!productData.size || !productData.color) {
       toast.warn("Please select color and size to proceed!");
       return;
     }
-    
-  
+    console.log("check color and size", productData.color, productData.size);
+
     try {
       const response = await fetch("/api/cart", {
         method: "POST",
@@ -61,7 +71,6 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          
           title: product.title,
           price: product.price,
           quantity: 1, // Default to 1 or allow user input
@@ -72,9 +81,9 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
           image: product.imageUrl,
         }),
       });
-  
+
       const res = await response.json();
-  
+
       if (response.ok) {
         toast.success("Product added to cart!");
       } else {
@@ -84,7 +93,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
       toast.error("Failed to fetch product to cart");
     }
   };
-  
+
   const handleAddToWish = async () => {
     const user = getCookie("user") as string | undefined;
     if (!user) {
@@ -144,7 +153,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
               onChange={(e) => setProductData({ ...productData, color: e.target.value })}
               className="mt-2 p-2 border border-gray-300 rounded-md"
             >
-              {product.colors.map((color) => (
+              {product.colors?.map((color) => (
                 <option key={color} value={color}>
                   {color.charAt(0).toUpperCase() + color.slice(1)}
                 </option>
@@ -161,7 +170,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
               className="mt-2 p-2 border border-gray-300 rounded-md"
             >
               <option value="">Select Size</option>
-              {product.size.map((size) => (
+              {product.size?.map((size) => (
                 <option key={size} value={size}>
                   {size}
                 </option>
