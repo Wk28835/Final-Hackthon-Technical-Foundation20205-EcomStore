@@ -2,6 +2,8 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Flip, toast, ToastContainer } from "react-toastify";
 import { AiFillMinusCircle, AiFillPlusCircle } from 'react-icons/ai';
+import { getCookie } from "cookies-next";
+import { useRouter } from "next/router";
 interface Cart {
   _id: string;
   title: string;
@@ -17,13 +19,24 @@ interface Cart {
 
 export default function Cart() {
   const [products, setProducts] = useState<Cart[]>([]);
-  
-  
+  const router = useRouter();
+  const user = getCookie("user") as string | undefined;
+     
+      
   
   useEffect(() => {
     async function fetchProducts() {
+
+      if (!user) {
+        router.push('/login');
+        return;
+      }
+      const userdata = JSON.parse(user);
+      
+      const email = userdata.email;
+      
       try {
-        const res = await fetch("/api/cart");
+        const res = await fetch(`/api/cart?email=${email}`);
         if (!res.ok) {
           throw new Error("Failed to fetch products");
         }
@@ -69,10 +82,15 @@ export default function Cart() {
   
   const calculateSubtotal = () => {
     let subTotal = 0;
+    if(Array.isArray(products)){
     products.forEach((item) => {
       subTotal += item.price * item.quantity;
     });
     return subTotal;
+  }
+  else{
+    console.log("products is not array",products);
+  }
   };
 
 
@@ -123,7 +141,7 @@ export default function Cart() {
           <h1 className="text-xl font-medium mb-4">Bag</h1>
           <div className="main div1 rounded-md shadow-inner shadow-gray-100"
             style={{ width: "100%", height: "auto", paddingTop: "24px", paddingBottom: "24px" }}>
-            {products.map((item) => (
+            {Array.isArray(products) && products.map((item) => (
               <div key={item._id} className="flex gap-8 p-3 mainproduct1 div w-full"
                 style={{ height: "170px" }}>
                 <Image className="rounded-md" width={150} height={150} alt="image"
