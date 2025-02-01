@@ -4,8 +4,13 @@ import sanityClient from "../../sanity/lib/client";
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   // POST request to create cart item
   if (req.method === "POST") {
-    const { _id,title,price,quantity,colors,status,size,category,image } = req.body;
-      console.log("check color from api ",colors);
+    const { _id, userId, title, price, quantity, colors, status, size, category, image, slug } = req.body;
+
+    if (!userId) {
+      return res.status(400).json({ message: "User email is required!" });
+    }
+
+
     if (!title || !price || !quantity || !size || !colors || !category || !image) {
       return res.status(400).json({ message: "Missing required fields" });
     }
@@ -14,15 +19,16 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       const cartItem = await sanityClient.create({
         _type: "cart",
         _id,
+        user: userId.email, // Store user email in the cart document
         title,
         price,
-        quantity,        
+        quantity,
         colors,
         status,
         size,
         category,
+        slug,
         image,
-         // Assuming you might want to associate the cart item with a user
       });
 
       return res.status(201).json({ success: true, cartItem });
@@ -32,10 +38,17 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     }
   }
 
-  // GET request to fetch cart items
+  // GET request to fetch cart items for a specific user
   if (req.method === "GET") {
-    const query = `*[_type == "cart"]{
+    const { email } = req.query; // Get email from query parameters
+
+    if (!email) {
+      return res.status(400).json({ message: "User email is required!" });
+    }
+
+    const query = `*[_type == "cart" && user == $email]{
         _id,
+        user,
         title,
         price,
         quantity,
@@ -48,11 +61,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     }`;
 
     try {
-      const cartItems = await sanityClient.fetch(query);
+      const cartItems = await sanityClient.fetch(query, { email });
       if (cartItems.length === 0) {
         return res.status(200).json({ message: "No cart items found" });
       }
-      res.status(200).json(cartItems);
+      res.status(200).json(cartItems || []);
     } catch (error) {
       console.error("Error fetching cart items:", error);
       res.status(500).json({ message: "Failed to fetch cart items", error });
