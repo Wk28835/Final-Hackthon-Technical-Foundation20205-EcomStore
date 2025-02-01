@@ -5,25 +5,65 @@ import sanityClient from "../../sanity/lib/client"
 
 const handler= async ( req: NextApiRequest, res: NextApiResponse)=>{
 
-if(req.method === "GET"){
-    const query = `*[_type == "wish"]{
-        _id,
-        title,
-        price,
-        quantity,
-        category,
-        image,
-        size,
-        colors,
-        status,
-        slug
-        }`;
+  if (req.method === "POST") {
+    const { product, color, size, userId } = req.body;
+
+    if (!userId) {
+      return res.status(400).json({ message: "User not authenticated" });
+    }
+
+    try {
+      // Create wish list item in Sanity
+      const wishItem = await sanityClient.create({
+        _type: "wish",
+        title: product.title,
+        price: product.price,
+        quantity: 1,
+        colors: color,
+        status: product.status,
+        size: size,
+        category: product.category,
+        image: product.imageUrl,
+      });
+
+      return res.status(201).json({ success: true, wishItem });
+    } catch (error) {
+      return res.status(500).json({ message: "Failed to create wish list item", error });
+    }
+    }
+
+    if (req.method === "GET") {
+      const { email } = req.query; // Get email from query parameters
   
-  // If category is defined, pass it in the parameters object
-  const cartItems = await sanityClient.fetch(query);
+      if (!email) {
+        return res.status(400).json({ message: "User email is required!" });
+      }
   
-  res.status(200).json(cartItems);
-}
+      const query = `*[_type == "wish" && user == $email]{
+          _id,
+          user,
+          title,
+          price,
+          quantity,
+          category,
+          image,
+          size,
+          colors,
+          status,
+          slug
+      }`;
+  
+      try {
+        const wishItems = await sanityClient.fetch(query, { email });
+        if (wishItems.length === 0) {
+          return res.status(200).json({ message: "No cart items found" });
+        }
+        res.status(200).json(wishItems || []);
+      } catch (error) {
+        console.error("Error fetching cart items:", error);
+        res.status(500).json({ message: "Failed to fetch cart items", error });
+      }
+    }
 if (req.method === "DELETE") {
   const { itemId } = req.body;
 
