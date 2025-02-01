@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 
 import { loadStripe } from "@stripe/stripe-js";
+import { getCookie } from "cookies-next";
+import { useRouter } from "next/router";
 
 interface Cart {
   _id: string;
@@ -19,6 +21,7 @@ interface Cart {
 
 const Checkout: React.FC = () => {
   const [products, setProducts] = useState<Cart[]>([]);
+  const[showbuttons,setShowButtons]=useState(false);
   const [formData, setFormData] = useState({
     first_Name: "",
     last_Name: "",
@@ -29,7 +32,7 @@ const Checkout: React.FC = () => {
     email: "",
     postal_code: "",
   });
-  
+  const router = useRouter();
 
   // Handle form field changes
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -95,12 +98,10 @@ const Checkout: React.FC = () => {
       if (!response.ok) {
         throw new Error("Failed to save the order");
       }
-
+      setShowButtons(true);
       // Order saved successfully
-      toast.success("Delivery Details Submitted! Please Proceed to Payment required below");
+      toast.success("Delivery Details Submitted! Please Select Payment Method");
 
-      // Create a payment intent
-      await handlePayment(); // Trigger payment intent creation
 
       // Clear form data (optional)
       setFormData({
@@ -150,11 +151,21 @@ const Checkout: React.FC = () => {
     toast.success("Order Placed Success! You will be informed Shortly");
   };
 
+  
+  const user = getCookie("user") as string | undefined;
   // Fetch cart products on component mount
   useEffect(() => {
+    if (!user) {
+      router.push('/login');
+      return;
+    }
+    const userdata = JSON.parse(user);
+    
+    const email = userdata.email;
+
     const fetchProducts = async () => {
       try {
-        const res = await fetch("/api/cart");
+        const res = await fetch(`/api/cart?email=${email}`);
         if (!res.ok) {
           throw new Error("Failed to fetch products");
         }
@@ -262,9 +273,9 @@ const Checkout: React.FC = () => {
             <p>Total: ₹{calculateSubtotal()}</p>
           </div>
 
-          <button
+         {showbuttons && ( <div className="right-24 relative"> <button
             onClick={handlePayment}
-            className="px-4 my-4 py-2 rounded-md left-64 bottom-14 relative bg-green-500"
+            className="px-4 my-4 py-2 mr-4 rounded-md left-64 bottom-14 relative bg-green-500"
           >
             Pay Now
           </button>
@@ -274,7 +285,9 @@ const Checkout: React.FC = () => {
             className="px-4 my-4 py-2 rounded-md left-64 bottom-14 relative bg-orange-500"
           >
             Cash On Delivery
-          </button>
+          </button> 
+          </div>)}
+
         </section>
       </div>
     </div>
