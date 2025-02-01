@@ -4,6 +4,11 @@ export default {
     title:'MyCart',
     fields:[
         {
+            name:'user',
+            type:'string',
+            title:'User',
+        },
+        {
             name:'title',
             type:'string',
             title:'Title',
@@ -14,10 +19,34 @@ export default {
             title:'Price',
         },
         {
+            name:'colors',
+            title:'Colors',
+            type:'string',
+            
+        }, 
+        {
+            name:'size',
+            title:'Size',
+            type:'string',
+            
+        },
+        {
             name:'quantity',
             type:'number',
             title:'Quantity',
         },
+        {
+            name: 'status',
+            type: 'string',
+            title: 'Status',
+            options: {
+              list: [
+                { title: 'Available', value: 'Available' },
+                { title: 'Sold Out', value: 'SoldOut' },
+                
+              ],
+            },
+        },  
         {
             name:'image',
             title:'Image',
