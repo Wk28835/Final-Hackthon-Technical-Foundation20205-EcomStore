@@ -21,75 +21,75 @@ export default function WishList() {
   const [products, setProducts] = useState<Wish[]>([]);
   const router = useRouter();
 
-  useEffect(() => {
-    const user = getCookie("user") as string | undefined;
-    console.log("check user",user);
-    // Check if user is logged in
-    if (!user) {
-      
-      router.push("/login");
-    }
-  }, [router]);
+  const user = getCookie("user") as string | undefined;
 
   useEffect(() => {
-    
-    const fetchProducts = async () => {
-      try {
-        const res = await fetch("/api/wish");
-        if (!res.ok) {
-          throw new Error("Failed to fetch products");
+      async function fetchProducts() {
+  
+        if (!user) {
+          router.push('/login');
+          return;
         }
-        const data: Wish[] = await res.json();
-        setProducts(data);
-      } catch (error) {
-        console.error("Error fetching products:", error);
+        const userdata = JSON.parse(user);
+        
+        const email = userdata.email;
+        
+        try {
+          const res = await fetch(`/api/wish?email=${email}`);
+          if (!res.ok) {
+            throw new Error("Failed to fetch products");
+          }
+          const data: Wish[] = await res.json();
+          
+          setProducts(data);
+        } catch (error) {
+          console.error("Error fetching products:", error);
+        }
+      }
+      fetchProducts();
+    }, []);
+
+    const handleAddToCart = async (item: Wish) => {
+      const user = getCookie("user") as string | undefined;
+     
+      if (!user) {
+        router.push("/login");
+        return;
+      }
+      const userdata = JSON.parse(user);
+      const email = userdata.email; 
+     console.log("check wish",userdata,email)
+     try {
+        const response = await fetch("/api/cart", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId:userdata,
+            title: item.title,
+            price: item.price,
+            quantity: 1, // Default to 1 or allow user input
+            colors: item.colors,
+            status: item.status,
+            size: item.size,
+            category: item.category,
+            image: item.image,
+            slug:item.slug
+          }),
+        });
+  
+        const res = await response.json();
+  
+        if (response.ok) {
+          toast.success("Product added to cart!");
+        } else {
+          toast.error(res.message || "Failed to add product to cart!");
+        }
+      } catch {
+        toast.error("Failed to fetch product to cart");
       }
     };
-
-    fetchProducts();
-  }, []);
-
-  const handleAddToCart = async (item:Wish):Promise<void> => {   
-    
-     
-    const user = getCookie("user") as string | undefined;// Check if user data exists in localStorage
-   
-    if (!user) {
-         router.push('/login'); // Redirect to login if not authenticated
-   }
-
-   else{
-      
-   try {
-     await sanityClient.create({
-       _type: "cart",
-       title: item.title,
-       price: item.price,
-       quantity: 1,
-       colors: item.colors,
-       status:item.status,
-       size:item.size,
-       category:item.category,
-       image:item.image,
-     });
-     toast.success("Product Added to Cart!")
-
-     //delete product from wish list after adding to cart
-     const response = await fetch("/api/wish", {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ itemId:item._id }),
-    });
-    if (response.ok) {
-      setProducts((prevProducts)=>prevProducts.filter((product)=>product._id!==item._id))
-      }
-     
-     
-   } catch {
-     toast.error("Failed to Add Product")
-   }
-}  
-}; 
 
   const handleRemoveItem = async (itemId: string): Promise<void> => {
     try {
@@ -119,7 +119,7 @@ export default function WishList() {
   };
 
   if (!products.length) {
-    return <div>Loading your wishlist...</div>; // Fallback for empty products
+    return <div className="text-center mt-44 text-red-500 text-2xl">Wishlist is Empty! Please Add Product to Maintain!</div>; // Fallback for empty products
   }
 
   return (
@@ -224,7 +224,7 @@ export default function WishList() {
 
                     <button
                       onClick={() => handleRemoveItem(item._id)}
-                      className="text-white bg-red-500 rounded px-3 py-1 hover:text-red-800">Delete
+                      className="mt-2 bg-red-500 text-white px-3 py-1 rounded-lg shadow-md hover:bg-gray-800 transition duration-200">Delete
                       
                        
                       
