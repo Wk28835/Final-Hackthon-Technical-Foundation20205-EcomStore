@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { deleteCookie, getCookie } from "cookies-next";
 import { useRouter } from "next/router";
+import { toast } from "react-toastify";
 
 interface NavProps {
   searchQuery: string;
@@ -32,6 +33,7 @@ const Nav: React.FC<NavProps> = ({ searchQuery, setSearchQuery }) => {
     setCheckUser(undefined);
     router.push("/");
     console.log("User logged out");
+    toast.error("You are Logged Out!")
   };
 
   return (
@@ -137,8 +139,8 @@ const Nav: React.FC<NavProps> = ({ searchQuery, setSearchQuery }) => {
               Latest Products
             </Link>
             <Link href={"/Product"}>Sale</Link>
-            <Link className="text-nowrap" href={"/wishList"}>
-              Wish List
+            <Link className="text-nowrap" href={"/myorders"}>
+              My Orders
             </Link>
           </div>
 
@@ -165,7 +167,7 @@ const Nav: React.FC<NavProps> = ({ searchQuery, setSearchQuery }) => {
 
           {/* Wishlist & Cart Buttons */}
           <div className="hidden sm:flex items-center gap-4">
-            <button>
+            <button onClick={() => (window.location.href = "/wishList")}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-6 w-6 text-gray-700"
@@ -175,6 +177,7 @@ const Nav: React.FC<NavProps> = ({ searchQuery, setSearchQuery }) => {
                 <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
               </svg>
             </button>
+
             <button onClick={() => (window.location.href = "/cart")}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -204,7 +207,21 @@ const Nav: React.FC<NavProps> = ({ searchQuery, setSearchQuery }) => {
             <Link href={"/"}>Women</Link>
             <Link href={"/Product"}>Latest Products</Link>
             <Link href={"/Product"}>Sale</Link>
-            <Link href={"/wishList"}>Wish List</Link>
+            <Link className="text-nowrap" href={"/myorders"}>
+              My Orders
+            </Link>
+
+            <button onClick={() => (window.location.href = "/wishList")}>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6 text-gray-700"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+              </svg>
+            </button>
+            
             <button onClick={() => (window.location.href = "/cart")}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
