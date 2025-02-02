@@ -18,12 +18,13 @@ interface ProductDetailsProps {
     size: string[] | null; // Handle null or undefined values
     status: string;
     imageUrl: string;
+    slug?: { current: string };
   } | null;
 }
 
 export default function ProductDetails({ product }: ProductDetailsProps) {
   const router = useRouter();
-
+  
   // Handle the fallback state (when `product` is null)
   const [productData, setProductData] = useState({
     size: product?.size?.[0] || "",
@@ -52,17 +53,19 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
 
   const handleAddToCart = async () => {
     const user = getCookie("user") as string | undefined;
-
+   
     if (!user) {
       router.push("/login");
       return;
     }
-
+    const userdata = JSON.parse(user);
+   
+    
     if (!productData.size || !productData.color) {
       toast.warn("Please select color and size to proceed!");
       return;
     }
-   console.log("check color and size", productData.color, productData.size,userdata);
+    console.log("check color and size", productData.color, productData.size,userdata);
 
     try {
       const response = await fetch("/api/cart", {
@@ -71,6 +74,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
+          userId:userdata,
           title: product.title,
           price: product.price,
           quantity: 1, // Default to 1 or allow user input
@@ -79,6 +83,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
           size: productData.size,
           category: product.category,
           image: product.imageUrl,
+          slug:product.slug
         }),
       });
 
@@ -95,10 +100,12 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
   };
 
   const handleAddToWish = async () => {
+    
     const user = getCookie("user") as string | undefined;
     if (!user) {
       router.push("/login");
     } else {
+      const userdata = JSON.parse(user);
       if (!productData.size || !productData.color) {
         toast.warn("Please Select Color and Size to Proceed!");
         return;
@@ -106,6 +113,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
       try {
         await sanityClient.create({
           _type: "wish",
+          user:userdata.email,
           title: product.title,
           price: product.price,
           quantity: 1,
