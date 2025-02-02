@@ -6,6 +6,8 @@ import { loadStripe } from "@stripe/stripe-js";
 import { getCookie } from "cookies-next";
 import { useRouter } from "next/router";
 
+
+
 interface Cart {
   _id: string;
   title: string;
@@ -22,6 +24,8 @@ interface Cart {
 const Checkout: React.FC = () => {
   const [products, setProducts] = useState<Cart[]>([]);
   const[showbuttons,setShowButtons]=useState(false);
+  const [loading, setLoading] = useState<boolean>(true);
+
   const [formData, setFormData] = useState({
     first_Name: "",
     last_Name: "",
@@ -85,7 +89,7 @@ const Checkout: React.FC = () => {
         status: "Pending",
       };
 
-      console.log("Check payload before fetch:", payload);
+      
 
       const response = await fetch("/api/orders", {
         method: "POST",
@@ -140,6 +144,12 @@ const Checkout: React.FC = () => {
       // Redirect to Stripe Checkout
       const stripe = await loadStripe('pk_test_51PjmlAI1ZwiCwOOmKNKOu24TcCOmvdU27219vWbYjlitVTWXrskrayJSZ59A78PPjlCruREKncNQhq5R80zdp0XG00oy7aeGmT');
       await stripe?.redirectToCheckout({ sessionId: id });
+
+      if(router.query.success==="true"){
+          handleClearCart();
+      }
+      toast.success("Payment Success!")
+
     } catch (error) {
       console.error("Error creating payment intent:", error);
       toast.error("Failed to proceed to payment.");
@@ -148,7 +158,45 @@ const Checkout: React.FC = () => {
 
   // Toggle showCard state
   const handleCod = () => {
+    handleClearCart();
     toast.success("Order Placed Success! You will be informed Shortly");
+    setShowButtons(false);
+    router.push('/myorders');
+  };
+
+  //function to clear cart payment success or after selection cod option
+const handleClearCart= async ()=>{
+            if (!user) {
+              router.push('/login');
+              return;
+            }
+            const userdata = JSON.parse(user);
+            
+            const userEmail = userdata.email;
+      try{
+            if(!userEmail){
+              return;
+            }
+       // Iterate over each cart item and delete it from the backend
+       for (const data of products) {
+        const res = await fetch('/api/cart', {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ cartId: data._id, email:userEmail }),
+        });
+
+        if (!res.ok) {
+          throw new Error(`Failed to delete cart item with ID: ${data._id}`);
+        }
+      }
+      setProducts([]); // Clear the products from frontend after successful deletion
+      
+    } catch (error) {
+      console.error("Error deleting cart items:", error);
+      toast.error("Failed to delete cart items.");
+    }
   };
 
   
@@ -171,6 +219,7 @@ const Checkout: React.FC = () => {
         }
         const data: Cart[] = await res.json();
         setProducts(data);
+        setLoading(false);
       } catch (error) {
         console.error("Error fetching products:", error);
       }
@@ -181,7 +230,13 @@ const Checkout: React.FC = () => {
 
   // Calculate subtotal
   const calculateSubtotal = () => {
-    return products.reduce((total, item) => total + item.price * item.quantity, 0);
+    // Check if products is an array before calling reduce
+    if (Array.isArray(products)) {
+      return products.reduce((total, item) => total + item.price * item.quantity, 0);
+    } else {
+      console.error("Products is not an array:", products);
+      return 0; // Return 0 if products is not an array
+    }
   };
 
   return (
@@ -257,7 +312,10 @@ const Checkout: React.FC = () => {
         {/* Right Section */}
         <section className="w-1/2">
           <h1 className="font-medium text-xl">Order Summary</h1>
-          {products.map((item) => (
+          
+          {loading?( <div className="text-center text-xl text-gray-800">Loading...</div>
+          ):(
+          Array.isArray(products) && products.map((item) => (
             <div key={item._id} className="flex items-center mt-4">
               <Image className="rounded" width={100} height={100} alt="product" src={item.image} />
               <div className="ml-4">
@@ -266,7 +324,10 @@ const Checkout: React.FC = () => {
                 <p className="text-gray-400 text-sm">₹ {item.price}</p>
               </div>
             </div>
-          ))}
+          ))
+        )}
+
+
           <div className="border-t mt-4 pt-2">
             <p className="text-sm">Subtotal: ₹{calculateSubtotal()}</p>
             <p>Delivery: Free</p>
