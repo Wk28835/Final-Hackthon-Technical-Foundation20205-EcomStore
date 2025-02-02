@@ -62,7 +62,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
       toast.warn("Please select color and size to proceed!");
       return;
     }
-    console.log("check color and size", productData.color, productData.size);
+   console.log("check color and size", productData.color, productData.size,userdata);
 
     try {
       const response = await fetch("/api/cart", {
