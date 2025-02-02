@@ -41,7 +41,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   // GET request to fetch cart items for a specific user
   if (req.method === "GET") {
     const { email } = req.query; // Get email from query parameters
-
+    
     if (!email) {
       return res.status(400).json({ message: "User email is required!" });
     }
@@ -74,13 +74,24 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   // DELETE request to delete a cart item
   if (req.method === "DELETE") {
-    const { cartId } = req.body;
-
-    if (!cartId) {
-      return res.status(400).json({ message: "Cart ID is required!" });
+    const { cartId, email } = req.body;
+  
+    if (!cartId || !email) {
+      return res.status(400).json({ message: "Cart ID and user email are required!" });
     }
-
+  
     try {
+      // Fetch the cart item from the database
+      const cartItem = await sanityClient.fetch(
+        `*[_type == "cart" && _id == $cartId && user == $email] { _id }`,
+        { cartId, email }
+      );
+  
+      if (cartItem.length === 0) {
+        return res.status(404).json({ message: "Cart item not found or not owned by the user" });
+      }
+  
+      // Proceed with deletion of the cart item
       await sanityClient.delete(cartId);
       return res.status(200).json({ message: "Product deleted successfully!" });
     } catch (error) {
