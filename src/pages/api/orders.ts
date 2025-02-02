@@ -32,7 +32,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "POST") {
     const { items, orderData, total, status } = req.body as OrderRequestBody; // Explicitly type req.body
 
-    console.log("check api received", req.body);
+    
 
     if (!items || !orderData || !total || !status) {
       return res.status(400).json({ message: "Missing required fields" });
@@ -77,7 +77,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   // GET request to fetch cart items
   if (req.method === "GET") {
-    const query = `*[_type == "orders && email == $email"]{
+    const {email} = req.query;
+
+    if (!email) {
+      return res.status(400).json({ message: "Email is required!" });
+    }
+    
+    const query = `*[_type == "orders" && email == $email]{
         _id,
         name,
         email,
@@ -95,7 +101,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     }`;
 
     try {
-      const cartItems = await sanityClient.fetch(query);
+      const cartItems = await sanityClient.fetch(query,{ email });
       if (cartItems.length === 0) {
         return res.status(200).json({ message: "No cart items found" });
       }
